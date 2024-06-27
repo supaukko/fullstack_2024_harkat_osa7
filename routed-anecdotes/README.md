@@ -9,3 +9,14 @@ React Router tarjoaa ratkaisun React-sovelluksen navigaation hallintaan
 ```
 npm install react-router-dom
 ```
+
+## [Custom hookit](https://fullstackopen.com/osa7/custom_hookit)
+
+### Fullstackopen - osa7 - Custom hookit - tehtavat 7.4 - 7.6
+
+Links:
+
+https://github.com/rehooks/awesome-react-hooks
+https://usehooks.com/
+https://overreacted.io/why-do-hooks-rely-on-call-order/
+
