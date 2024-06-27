@@ -7,6 +7,7 @@ import Anecdote from './components/Anecdote'
 import About from './components/About'
 import Footer from './components/Footer'
 import { Routes, Route, useMatch, useNavigate } from 'react-router-dom'
+import { Container } from '@mui/material'
 
 const container = [
   {
@@ -65,7 +66,7 @@ const App = () => {
 
   return (
     // Bootstrapissa koko sivun sisältö renderöidään yleensä container:ina
-    <div className="container">
+    <Container>
       <h1>Software anecdotes</h1>
       <Menu />
       <Notification notification={notification} />
@@ -76,7 +77,7 @@ const App = () => {
         <Route path="/create" element={<CreateNew addNew={addNew} />} />
       </Routes>
       <Footer />
-    </div>
+    </Container>
   )
 }
 

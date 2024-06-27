@@ -19,3 +19,24 @@ Lisään index.html tiedostoon CDN:
   crossorigin="anonymous"
 />
 ```
+
+## [MaterialUI](https://mui.com/)
+
+`npm install @mui/material @emotion/react @emotion/styled`
+
+Renderöidään koko App Container sisään:
+
+```
+import { Container } from '@mui/material'
+
+const App = () => {
+  // ...
+  return (
+    <Container>
+      // ...
+    </Container>
+  )
+}
+
+```
+

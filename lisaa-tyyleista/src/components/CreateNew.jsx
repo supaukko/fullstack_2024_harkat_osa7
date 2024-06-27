@@ -1,4 +1,8 @@
 import  { useField, useWindowWidth } from '../hooks'
+import {
+  Button,
+  TextField,
+} from '@mui/material'
 
 const CreateNew = (props) => {
   const {set: contentSet, ...content} = useField('content', 'text')
@@ -29,19 +33,16 @@ const CreateNew = (props) => {
       <h2>create a new anecdote (window width={width})</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          content
-          <input {...content} />
+          <TextField label='content' {...content} />
         </div>
         <div>
-          author
-          <input {...author} />
+          <TextField label='author' {...author} />
         </div>
         <div>
-          url for more info
-          <input {...info} />
+          <TextField label='url for more info' {...info} />
         </div>
-        <button type='submit'>create</button>
-        <button type='button' onClick={handleReset}>reset</button>
+        <Button type='submit' variant="contained" color="primary">create</Button>
+        <Button type='button' variant="contained" color="secondary" onClick={handleReset}>reset</Button>
       </form>
     </div>
   )

@@ -1,3 +1,4 @@
+import { Alert } from '@mui/material'
 const Notification = ({notification}) => {
 
   const style = {
@@ -11,8 +12,8 @@ const Notification = ({notification}) => {
     return
   }
   return (
-    <div style={style}>
-      {notification}
+    <div>
+      <Alert severity="success">{notification}</Alert>
     </div>
   )
 }
