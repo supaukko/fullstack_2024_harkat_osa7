@@ -1,4 +1,5 @@
-import  { useField, useWindowWidth } from '../hooks'
+import { useField, useWindowWidth } from '../hooks'
+import { Form, Input, Button } from './styled'
 
 const CreateNew = (props) => {
   const {set: contentSet, ...content} = useField('content', 'text')
@@ -27,22 +28,22 @@ const CreateNew = (props) => {
   return (
     <div>
       <h2>create a new anecdote (window width={width})</h2>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <Input {...content} />
         </div>
         <div>
           author
-          <input {...author} />
+          <Input {...author} />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <Input {...info} />
         </div>
-        <button type='submit'>create</button>
-        <button type='button' onClick={handleReset}>reset</button>
-      </form>
+        <Button type='submit'>create</Button>
+        <Button type='button' onClick={handleReset}>reset</Button>
+      </Form>
     </div>
   )
 }
