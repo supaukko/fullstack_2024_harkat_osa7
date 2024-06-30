@@ -1,24 +1,30 @@
 import globals from 'globals';
 import js from '@eslint/js';
 import stylisticJs from '@stylistic/eslint-plugin-js';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+
 
 export default [
   js.configs.recommended,
   {
-    ignores: ['**/dist/', '**/node_modules/', '**/vite.config.js']
-  },
-  {
+    files: ["**/*.js"],
+    ignores: [
+      '**/dist/',
+      '**/node_modules/',
+      '**/vite.config.js',
+      'bloglist-frontend/'
+    ],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "commonjs",
+      globals: { 
+        ...globals.browser,
+        ...globals.node 
+      }
+    },
     plugins: {
       '@stylistic/js': stylisticJs
-    },
-    files: ['**/*.js'],
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node
-      },
-      ecmaVersion: 'latest',
-      sourceType: 'module'
     },
     rules: {
       '@stylistic/js/indent': ['error', 2],
@@ -33,11 +39,17 @@ export default [
       'eqeqeq': 'error',
       'no-trailing-spaces': 'error',
       'object-curly-spacing': [
-        'error', 'always'
+        'error',
+        'always'
       ],
       'arrow-spacing': [
-        'error', { 'before': true, 'after': true }
+        'error', {
+          'before': true,
+          'after': true
+        }
       ]
     },
-  }
+  },
+  eslintPluginPrettierRecommended,
+  eslintConfigPrettier,
 ];

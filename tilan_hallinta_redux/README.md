@@ -196,4 +196,66 @@ npx playwright show-report
 [Tehtävät 7.9 - 7.13](https://fullstackopen.com/osa7/tehtavia_blogilistan_laajennus#tehtavat-7-9-7-21)
 
 
+## 7.9: koodin automaattinen muotoilu
+
+### ESLint
+
+#### Backend
+
+Asennetaan ESLint, joka käyttää uuttaa [flat-konfiguraatiota](https://eslint.org/blog/2022/08/new-config-system-part-2/)
+
+[Getting Started with ESLint](https://eslint.org/docs/latest/use/getting-started)
+
+
+```
+npm init @eslint/config@latest
+```
+
+Backendille valitaan sourcetypeksi `commonjs` (require / export) ja jätetään linttauksesta pois bloglist-frontend-alihakemisto,
+jossa on käytössä ECMAScript moduulit (import / export)
+
+#### Frontend
+
+
+Viten mukana ESlint on valmiiksi asennettu - tämä versio käyttää vanhaa konfiguraatiota.
+
+### Prettier
+
+Asennetaan kehitysaikaiset kirjastot:
+```
+npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier prettier
+
+```
+
+eslint-config-prettier - Turns off all rules that are unnecessary or might conflict with Prettier.
+
+eslint-plugin-prettier - Runs Prettier as an ESLint rule
+
+
+#### Backend
+
+`eslint.config.mjs` tiedostossa
+
+Tehdään `.prettierrc` tiedosto.
+Tehdään `.prettierignore` tiedosto ja lisätään sinne mm. bloglist-frontend hakemisto
+
+
+#### Frontend
+
+
+`.eslintrc.cjs` tiedostoon lisätään
+
+```
+  plugins: [
+    ...
+    'prettier'
+  ],
+  extends: [
+    ...
+    'plugin:prettier/recommended',
+  ],
+```
+
+Tehdään `.prettierrc` tiedosto.
+Tehdään `.prettierignore` tiedosto ja lisätään sinne mm. bloglist-frontend hakemisto
 
