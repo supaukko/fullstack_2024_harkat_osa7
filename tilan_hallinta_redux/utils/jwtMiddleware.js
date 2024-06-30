@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const config = require('./config')
 
-const getTokenFrom = request => {
+const getTokenFrom = (request) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.startsWith('Bearer ')) {
     return authorization.replace('Bearer ', '')
@@ -24,8 +24,7 @@ const jwtMiddleware = async (request, response, next) => {
     }
     request.user = decodedToken
     next()
-  }
-  catch (error) {
+  } catch (error) {
     response.status(400).json({ message: `Invalid token, ${error.message}` })
   }
 }

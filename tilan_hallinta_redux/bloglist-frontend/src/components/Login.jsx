@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 function Login({ handleLogin }) {
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -17,13 +16,13 @@ function Login({ handleLogin }) {
   }
 
   return (
-    <div className='border'>
+    <div className="border">
       <h2>log in to application</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Username</label>
           <input
-            data-testid='username'
+            data-testid="username"
             id="username"
             name="username"
             type="text"
@@ -34,7 +33,7 @@ function Login({ handleLogin }) {
         <div>
           <label htmlFor="password">Password</label>
           <input
-            data-testid='password'
+            data-testid="password"
             id="password"
             name="password"
             type="password"

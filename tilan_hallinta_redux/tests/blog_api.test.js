@@ -22,10 +22,12 @@ const testUser = {
  * @returns token
  */
 const doLogin = async (username, password) => {
-  const loginResponse = await api.post('/api/login')
+  const loginResponse = await api
+    .post('/api/login')
     .send({
       username: username,
-      password: password })
+      password: password
+    })
     .expect(200)
     .expect('Content-Type', /application\/json/)
   return loginResponse.body.token
@@ -53,7 +55,7 @@ after(async () => {
 describe('Tehtavat 4.8 - 4.12', () => {
   describe('GET /api/blogs', () => {
     test('Should get correct number of objects', async () => {
-    // Act
+      // Act
       const response = await api.get('/api/blogs')
 
       // Assert
@@ -62,17 +64,19 @@ describe('Tehtavat 4.8 - 4.12', () => {
 
     test('Should have `id` identifier field', async () => {
       const response = await api.get('/api/blogs')
-      response.body.forEach(blog => {
+      response.body.forEach((blog) => {
         assert.strictEqual(
           Object.prototype.hasOwnProperty.call(blog, 'id'),
-          true, `Document ${JSON.stringify(blog)} does not have an 'id' property`)
+          true,
+          `Document ${JSON.stringify(blog)} does not have an 'id' property`
+        )
       })
     })
   })
 
   describe('POST /api/blogs', () => {
     test('Should add blog', async () => {
-    // Arrange
+      // Arrange
       const newBlog = {
         title: 'Test title',
         author: 'Test author',
@@ -90,13 +94,13 @@ describe('Tehtavat 4.8 - 4.12', () => {
 
       // Assert
       const response = await api.get('/api/blogs')
-      const authors = response.body.map(r => r.author)
+      const authors = response.body.map((r) => r.author)
       assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
       assert(authors.includes(newBlog.author))
     })
 
     test('Shoud have default value `0` for the `likes`', async () => {
-    // Arrange
+      // Arrange
       const newBlog = {
         title: 'Test title',
         author: 'Test author',
@@ -115,11 +119,11 @@ describe('Tehtavat 4.8 - 4.12', () => {
       // Assert
       const response = await api.get('/api/blogs')
       assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
-      assert(response.body.every(blog => blog['votes'] !== null))
+      assert(response.body.every((blog) => blog['votes'] !== null))
     })
 
     test('Should return status 400 if no `author` or `URL`', async () => {
-    // Arrange
+      // Arrange
       const newBlog = {
         author: 'Test author',
         votes: 15
@@ -184,7 +188,7 @@ describe('User handling', () => {
     const newUser = {
       username: 'joedoe',
       name: 'Joe Doe',
-      password: 'passwd',
+      password: 'passwd'
     }
 
     // Act
@@ -197,7 +201,7 @@ describe('User handling', () => {
     // Assert
     const usersAtEnd = await helper.usersInDb()
     assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
-    const usernames = usersAtEnd.map(u => u.username)
+    const usernames = usersAtEnd.map((u) => u.username)
     assert(usernames.includes(newUser.username))
   })
 })
@@ -213,7 +217,7 @@ describe('Tehtavat 4.15 - 4.23', () => {
       const newUser = {
         username: 'joedoe',
         name: 'Joe Doe',
-        password: 'pa',
+        password: 'pa'
       }
 
       // Act
@@ -233,7 +237,7 @@ describe('Tehtavat 4.15 - 4.23', () => {
       const newUser = {
         username: 'joedoe',
         name: 'Joe Doe',
-        password: 'pass',
+        password: 'pass'
       }
       await api
         .post('/api/users')
@@ -258,8 +262,8 @@ describe('Tehtavat 4.15 - 4.23', () => {
     describe('DELETE /api/blogs/:id', () => {
       describe('DELETE /api/blogs/:id', () => {
         test('should fail when unauthorized, no token', async () => {
-        // Arrange
-        // Add a user how has no blogs
+          // Arrange
+          // Add a user how has no blogs
           const userData = {
             username: 'joedoe',
             name: 'Joe Doe',
@@ -275,9 +279,7 @@ describe('Tehtavat 4.15 - 4.23', () => {
           const blog = { ...response.body[0] }
 
           // Act & assert
-          await api
-            .delete(`/api/blogs/${blog.id}`)
-            .expect(401)
+          await api.delete(`/api/blogs/${blog.id}`).expect(401)
 
           response = await api.get('/api/blogs')
           assert.strictEqual(response.body.length, helper.initialBlogs.length)

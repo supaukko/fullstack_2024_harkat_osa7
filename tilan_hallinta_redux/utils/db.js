@@ -8,15 +8,15 @@ const doAsyncConnect = async () => {
   try {
     await mongoose.connect(config.MONGODB_URI)
     logger.info('connected to MongoDB')
-  }
-  catch(error) {
+  } catch (error) {
     logger.error('error connection to MongoDB:', error.message)
     throw error
   }
 }
 
 const doConnect = () => {
-  mongoose.connect(config.MONGODB_URI)
+  mongoose
+    .connect(config.MONGODB_URI)
     .then(() => {
       logger.info('connected to MongoDB')
     })
@@ -31,5 +31,7 @@ const doAsyncClose = async () => {
 }
 
 module.exports = {
-  doAsyncConnect, doConnect, doAsyncClose
+  doAsyncConnect,
+  doConnect,
+  doAsyncClose
 }

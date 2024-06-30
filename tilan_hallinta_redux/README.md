@@ -1,4 +1,3 @@
-
 # Fullstackopen - osa 4
 
 [fullstackopen osa 4](https://fullstackopen.com/osa4)
@@ -6,6 +5,7 @@
 ## Backend
 
 Tehdään uusi Node-projekti
+
 ```
 npm init
 npm install eslint
@@ -31,7 +31,7 @@ npm init @eslint/config@latest
 
 ### Lisäosat
 
-[Lisäosat](https://eslint.style/packages/js): 
+[Lisäosat](https://eslint.style/packages/js):
 
 ```
 npm install --save-dev eslint @eslint/js
@@ -42,10 +42,10 @@ npm install --save-dev @stylistic/eslint-plugin-js
 
 Käytetään [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database) palvelun tarjoamaa NoSQL tietokantaa
 
-
 # Frontend
 
 Luodaan frontend-alihakemistoon Vite-projekti:
+
 ```
 npm create vite@latest frontend -- --template react
 cd frontend
@@ -70,6 +70,7 @@ Käynnistetään backend: `npm run dev`
 Mennään selaimella osoitteeseen: `http://localhost:3001/`
 
 ### Same origin policy ja CORS
+
 Koska palvelin on localhostin portissa 3001 ja frontend localhostin portissa 5173, niiden origin ei ole sama.
 Muista origineista tulevat pyynnöt voidaan sallia kaikkiin backendin Express routeihin käyttämällä Noden cors-middlewarea.
 
@@ -105,13 +106,11 @@ erillisiä avulla try-catch lohkoja eikä next(exception) funktiokutsu. Kirjasto
 
 `npm install express-async-errors`
 
-
 # Kirjautuminen
 
 JSON web token generoidaan jsonwebtoken-kirjaston avulla.
 .env tiedostoon talletetaan testailua varten:
 `SECRET=1dfae605-829f-47d8-bfca-536aa7e7eec1`
-
 
 Kryptauksessa käytetään bcryptjs kirjastoa (bcrypt kirjasston kanssa
 voi olla ongelmia Windowsin kanssa)
@@ -154,6 +153,7 @@ npm install --save-dev eslint-plugin-vitest-globals
 ```
 
 Screen -objektin sisällön tulostus konsoliiin
+
 ```
 screen.debug()
 
@@ -190,11 +190,9 @@ npm run test -- --trace on
 npx playwright show-report
 ```
 
-
 # Fullstackopen - osa 7 - tilan hallinta: Redux
 
 [Tehtävät 7.9 - 7.13](https://fullstackopen.com/osa7/tehtavia_blogilistan_laajennus#tehtavat-7-9-7-21)
-
 
 ## 7.9: koodin automaattinen muotoilu
 
@@ -206,7 +204,6 @@ Asennetaan ESLint, joka käyttää uuttaa [flat-konfiguraatiota](https://eslint.
 
 [Getting Started with ESLint](https://eslint.org/docs/latest/use/getting-started)
 
-
 ```
 npm init @eslint/config@latest
 ```
@@ -216,12 +213,12 @@ jossa on käytössä ECMAScript moduulit (import / export)
 
 #### Frontend
 
-
 Viten mukana ESlint on valmiiksi asennettu - tämä versio käyttää vanhaa konfiguraatiota.
 
 ### Prettier
 
 Asennetaan kehitysaikaiset kirjastot:
+
 ```
 npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier prettier
 
@@ -231,7 +228,6 @@ eslint-config-prettier - Turns off all rules that are unnecessary or might confl
 
 eslint-plugin-prettier - Runs Prettier as an ESLint rule
 
-
 #### Backend
 
 `eslint.config.mjs` tiedostossa
@@ -239,9 +235,7 @@ eslint-plugin-prettier - Runs Prettier as an ESLint rule
 Tehdään `.prettierrc` tiedosto.
 Tehdään `.prettierignore` tiedosto ja lisätään sinne mm. bloglist-frontend hakemisto
 
-
 #### Frontend
-
 
 `.eslintrc.cjs` tiedostoon lisätään
 
@@ -258,4 +252,3 @@ Tehdään `.prettierignore` tiedosto ja lisätään sinne mm. bloglist-frontend 
 
 Tehdään `.prettierrc` tiedosto.
 Tehdään `.prettierignore` tiedosto ja lisätään sinne mm. bloglist-frontend hakemisto
-

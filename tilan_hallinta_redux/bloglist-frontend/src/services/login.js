@@ -2,7 +2,7 @@ import axios from 'axios'
 const baseUrl = '/api/login'
 import { USER_STORAGE_KEY } from '../config/constants'
 
-const login = async credentials => {
+const login = async (credentials) => {
   const response = await axios.post(baseUrl, credentials)
   return response.data
 }

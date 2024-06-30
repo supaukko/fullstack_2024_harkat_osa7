@@ -16,20 +16,24 @@ describe('<Blogs />', () => {
       username: 'username',
       name: 'User Name'
     }
-    blogsObj = [{
-      title: 'Lorem ipsum dolor sit amet',
-      author: 'Joe Doe',
-      url: 'https://foo.fi',
-      votes: 2000,
-      user: { ...userObj }
-    }]
+    blogsObj = [
+      {
+        title: 'Lorem ipsum dolor sit amet',
+        author: 'Joe Doe',
+        url: 'https://foo.fi',
+        votes: 2000,
+        user: { ...userObj }
+      }
+    ]
 
     container = render(
       <Blogs
         blogs={blogsObj}
         user={userObj}
         handleUpdateBlog={handleUpdateBlog}
-        handleDeleteBlog={handleDeleteBlog} />).container
+        handleDeleteBlog={handleDeleteBlog}
+      />
+    ).container
   })
 
   test('5.13. Renders only title and author fields of the blog', async () => {
@@ -51,17 +55,15 @@ describe('<Blogs />', () => {
     expect(screen.getByText(blogsObj[0].votes, { exact: false })).toBeDefined()
   })
 
-  test('5.15. Event handler is called twice when the like button is pressed twice',
-    async () => {
+  test('5.15. Event handler is called twice when the like button is pressed twice', async () => {
+    const user = userEvent.setup()
+    const viewButton = screen.getByText('view')
 
-      const user = userEvent.setup()
-      const viewButton = screen.getByText('view')
+    await user.click(viewButton)
+    const likeButton = screen.getByText('like')
+    await user.click(likeButton)
+    await user.click(likeButton)
 
-      await user.click(viewButton)
-      const likeButton = screen.getByText('like')
-      await user.click(likeButton)
-      await user.click(likeButton)
-
-      expect(handleUpdateBlog.mock.calls).toHaveLength(2)
-    })
+    expect(handleUpdateBlog.mock.calls).toHaveLength(2)
+  })
 })

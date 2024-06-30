@@ -1,4 +1,3 @@
-
 import PropTypes from 'prop-types'
 function Filter({ filter, handleChange }) {
   return (

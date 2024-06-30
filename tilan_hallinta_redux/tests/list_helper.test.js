@@ -10,7 +10,7 @@ const oneTestBlog = [
     url: 'https://reactpatterns.com/',
     votes: 5,
     __v: 0
-  },
+  }
 ]
 const testBlogs = [
   {
@@ -66,7 +66,8 @@ describe('Tehtavat 4.5', () => {
   const expectedResult = {
     title: 'Canonical string reduction',
     author: 'Edsger W. Dijkstra',
-    votes: 12 }
+    votes: 12
+  }
 
   test('favoriteBlog find one blog from a list of blocks', () => {
     const result = listHelper.favoriteBlog(testBlogs)
@@ -81,7 +82,8 @@ describe('Tehtavat 4.5', () => {
 describe('Tehtavat 4.6', () => {
   const expectedResult = {
     author: 'Edsger W. Dijkstra',
-    blogs: 2 }
+    blogs: 2
+  }
 
   test('mostBlogs find author with the most blocks', () => {
     const result = listHelper.mostBlogs(testBlogs)
@@ -92,7 +94,8 @@ describe('Tehtavat 4.6', () => {
 describe('Tehtavat 4.7', () => {
   const expectedResult = {
     author: 'Edsger W. Dijkstra',
-    likes: 17 }
+    likes: 17
+  }
 
   test('mostLikes find author with the most likes', () => {
     const result = listHelper.mostLikes(testBlogs)

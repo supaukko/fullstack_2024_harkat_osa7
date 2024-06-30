@@ -15,18 +15,20 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: function(value) {
+      validator: function (value) {
         return value !== null || value.trim() !== ''
-      }, message: 'Invalid title'
+      },
+      message: 'Invalid title'
     }
   },
   url: {
     type: String,
     required: true,
     validate: {
-      validator: function(value) {
+      validator: function (value) {
         return value !== null || value.trim() !== ''
-      }, message: 'Invalid URL'
+      },
+      message: 'Invalid URL'
     }
   },
   votes: {

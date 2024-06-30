@@ -20,11 +20,12 @@ const getTokenFrom = request => {
  * @returns
  */
 const getBlog = async (id) => {
-  const blog =  await Blog.findById(id)
-    .populate('user', { username: 1, name: 1 })
+  const blog = await Blog.findById(id).populate('user', {
+    username: 1,
+    name: 1
+  })
   return blog
 }
-
 
 router.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -38,7 +39,7 @@ router.get('/', async (request, response) => {
  */
 router.get('/:id', async (request, response /*,next*/) => {
   //try {
-  const blog =  await getBlog(request.params.id)
+  const blog = await getBlog(request.params.id)
   if (blog) {
     response.json(blog)
   } else {
@@ -52,7 +53,6 @@ router.post(
   tokenExtractor,
   userExtractor,
   async (request, response /*,next*/) => {
-
     if (request.token === null || request.token.id === null) {
       return response.status(401).json({ error: 'token invalid' })
     }
@@ -78,18 +78,22 @@ router.post(
       user.blogs = user.blogs.concat(savedBlog._id)
       await user.save()
     }
-    console.log(`router.post - new blog id=${savedBlog._id}, user's block count=${user?.blogs?.length} kpl`)
+    console.log(
+      `router.post - new blog id=${savedBlog._id}, user's block count=${user?.blogs?.length} kpl`
+    )
 
     const result = await getBlog(savedBlog._id)
     response.status(201).json(result)
-  //} catch(error) { next(error) }
-  })
+    //} catch(error) { next(error) }
+  }
+)
 
-router.delete('/:id',
+router.delete(
+  '/:id',
   tokenExtractor,
   userExtractor,
   async (request, response /*,next*/) => {
-  //try {
+    //try {
     const blogId = request.params.id
     const userId = request.user._id
     if (!mongoose.Types.ObjectId.isValid(blogId)) {
@@ -102,16 +106,21 @@ router.delete('/:id',
     }
 
     if (blog.user.toString() !== userId.toString()) {
-      logger.error('No authorization (403) to delete the blog',
-        blog.user.toString(), userId.toString())
-      return response.status(403).json(
-        { message: 'No authorization to delete the blog' })
+      logger.error(
+        'No authorization (403) to delete the blog',
+        blog.user.toString(),
+        userId.toString()
+      )
+      return response
+        .status(403)
+        .json({ message: 'No authorization to delete the blog' })
     }
 
     await blog.deleteOne()
     response.status(204).end()
-  //} catch(error) { next(error) }
-  })
+    //} catch(error) { next(error) }
+  }
+)
 
 /**
  * Update

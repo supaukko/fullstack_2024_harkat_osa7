@@ -18,8 +18,7 @@ describe('<Blog />', () => {
       username: 'username',
       name: 'User Name'
     }
-    container = render(
-      <Blog blog={blogObj} user={userObj} />).container
+    container = render(<Blog blog={blogObj} user={userObj} />).container
   })
 
   test('renders content - text selector', () => {

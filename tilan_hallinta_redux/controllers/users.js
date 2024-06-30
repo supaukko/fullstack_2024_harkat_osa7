@@ -1,4 +1,4 @@
-const  bcryptjs = require('bcryptjs')
+const bcryptjs = require('bcryptjs')
 const router = require('express').Router()
 const User = require('../models/user')
 
@@ -8,7 +8,9 @@ const User = require('../models/user')
 router.post('/', async (request, response) => {
   const { username, name, password } = request.body
   if (password === null || password.trim().length < 3) {
-    return response.status(400).json({ error: 'Validation error: password too short' })
+    return response
+      .status(400)
+      .json({ error: 'Validation error: password too short' })
   }
 
   const saltRounds = 10
@@ -17,7 +19,7 @@ router.post('/', async (request, response) => {
   const user = new User({
     username,
     name,
-    passwordHash,
+    passwordHash
   })
 
   const savedUser = await user.save()
@@ -34,8 +36,12 @@ router.post('/', async (request, response) => {
 
  */
 router.get('/', async (request, response) => {
-  const users = await User
-    .find({}).populate('blogs', { author: 1, title: 1, url: 1, votes: 1 })
+  const users = await User.find({}).populate('blogs', {
+    author: 1,
+    title: 1,
+    url: 1,
+    votes: 1
+  })
   response.json(users)
 })
 
@@ -48,7 +54,9 @@ router.delete('/:id', async (request, response /*,next*/) => {
 
 router.put('/:id', async (request, response /*,next*/) => {
   //try {
-  const user = await User.findByIdAndUpdate(request.params.id, request.body, { new: true })
+  const user = await User.findByIdAndUpdate(request.params.id, request.body, {
+    new: true
+  })
   if (!user) {
     return response.status(404).json({ message: 'User not found' })
   }

@@ -1,12 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({
-  blog,
-  user,
-  handleDeleteBlog,
-  handleUpdateBlog }) => {
-
+const Blog = ({ blog, user, handleDeleteBlog, handleUpdateBlog }) => {
   const [isVisible, setIsVisible] = useState(false)
 
   //console.log(`Blog user=${user?.username}`, blog)
@@ -27,11 +22,11 @@ const Blog = ({
   return (
     <li className={'blog'}>
       <div className={'row'}>
-        <p className='paragraph'>{blog.title} -- {blog.author}</p>
+        <p className="paragraph">
+          {blog.title} -- {blog.author}
+        </p>
         <div>
-          <button
-            className={'toggle-button'}
-            onClick={toggleVisible}>
+          <button className={'toggle-button'} onClick={toggleVisible}>
             {isVisible ? 'hide' : 'view'}
           </button>
         </div>
@@ -39,24 +34,27 @@ const Blog = ({
       {isVisible && (
         <>
           <div className={'row'}>
-            <p className='paragraph'>url: {blog.url}</p>
+            <p className="paragraph">url: {blog.url}</p>
           </div>
           <div className={'row'}>
-            <p
-              className='paragraph'
-              data-testid='blog_votes'>likes: {blog.votes}</p>
+            <p className="paragraph" data-testid="blog_votes">
+              likes: {blog.votes}
+            </p>
             <div>
-              <button
-                onClick={handleIncreaseLikes}>like</button>
+              <button onClick={handleIncreaseLikes}>like</button>
             </div>
           </div>
           <div className={'row'}>
-            <p className='paragraph'>user: {blog.user?.name}</p>
+            <p className="paragraph">user: {blog.user?.name}</p>
           </div>
-          { !isRemoveEnabled && (
-            <button className={'blue-button'}
+          {!isRemoveEnabled && (
+            <button
+              className={'blue-button'}
               onClick={() => handleDeleteBlog(blog.id)}
-              disabled={isRemoveEnabled}>remove</button>
+              disabled={isRemoveEnabled}
+            >
+              remove
+            </button>
           )}
         </>
       )}

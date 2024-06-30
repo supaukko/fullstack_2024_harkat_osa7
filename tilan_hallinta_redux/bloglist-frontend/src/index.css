@@ -34,13 +34,15 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   border: 1px solid black;
   padding: 8px;
   text-align: left;
 }
 
-tr:hover, .border.row:hover {
+tr:hover,
+.border.row:hover {
   background-color: #cbc9c9;
 }
 
@@ -84,4 +86,3 @@ tr:hover, .border.row:hover {
   padding: 0;
   margin: 0;
 }
-

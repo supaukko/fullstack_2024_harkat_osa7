@@ -25,15 +25,15 @@ const initialBlogs = [
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
-  return blogs.map(blogs => blogs.toJSON())
+  return blogs.map((blogs) => blogs.toJSON())
 }
 
 const usersInDb = async () => {
   const users = await User.find({})
-  return users.map(user => user.toJSON())
+  return users.map((user) => user.toJSON())
 }
 
-const createPasswdHash = async(passwd) => {
+const createPasswdHash = async (passwd) => {
   return await bcryptjs.hash(passwd, 10)
 }
 
@@ -43,16 +43,16 @@ const addUserAndBlocks = async (userData, blocksData) => {
   const user = new User({
     username: userData.username,
     name: userData.name,
-    passwordHash: hash })
+    passwordHash: hash
+  })
   const savedUser = await user.save()
 
   // Create blogs
   for (const blog of blocksData) {
-    const obj = new Blog(
-      {
-        ...blog,
-        user: savedUser._id
-      })
+    const obj = new Blog({
+      ...blog,
+      user: savedUser._id
+    })
     const savedObj = await obj.save()
     savedUser.blogs = savedUser.blogs.concat(savedObj._id)
   }

@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
@@ -12,7 +10,6 @@ const defaultBlogData = {
 }
 
 const BlogForm = ({ handleAddBlog }) => {
-
   const [blogData, setBlogData] = useState({ ...defaultBlogData })
 
   const header = 'Add a new blog'

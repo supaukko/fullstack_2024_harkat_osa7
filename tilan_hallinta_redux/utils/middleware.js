@@ -21,14 +21,15 @@ const parseError = (error) => {
 const errorHandler = (error, request, response, next) => {
   logger.error('errorHandler:', error.name, error.message)
 
-  if (error.name === 'CastError' || error.name === 'ValidationError'
-    || error.name === 'MongoServerError') {
+  if (
+    error.name === 'CastError' ||
+    error.name === 'ValidationError' ||
+    error.name === 'MongoServerError'
+  ) {
     return response.status(400).send(parseError(error))
-  }
-  else if (error.name === 'JsonWebTokenError') {
+  } else if (error.name === 'JsonWebTokenError') {
     return response.status(401).json({ error: 'invalid token' })
-  }
-  else if (error.name === 'TokenExpiredError') {
+  } else if (error.name === 'TokenExpiredError') {
     return response.status(401).json({
       error: 'token expired'
     })
@@ -74,7 +75,7 @@ const userExtractor = async (request, response, next) => {
   if (result.message) {
     return response.status(result.status).json({ message: result.message })
   }
-  const user =  await User.findById(result.token.id)
+  const user = await User.findById(result.token.id)
   request.user = user
   next()
 }
@@ -87,17 +88,18 @@ const userExtractor = async (request, response, next) => {
  * @param {*} next
  */
 const dummyAuthorizationInsertion = async (request, response, next) => {
-
   const authorization = request.headers['authorization']
-  if (config.ENV !== 'test' && (authorization === undefined ||
-    !authorization.startsWith('Bearer '))) {
+  if (
+    config.ENV !== 'test' &&
+    (authorization === undefined || !authorization.startsWith('Bearer '))
+  ) {
     const users = await User.find({})
     if (users !== null && users.length) {
       const user = users[0]
       const token = jwt.sign(
         {
           username: user.username,
-          id: user._id,
+          id: user._id
         },
         config.SECRET,
         { expiresIn: Number(config.TOKEN_EXPIRES_IN) }

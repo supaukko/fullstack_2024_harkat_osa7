@@ -21,7 +21,10 @@ const favoriteBlog = (blogs) => {
   if (!Array.isArray(blogs)) {
     throw new TypeError('Parameter is not an array')
   }
-  const blog = blogs.reduce((max, obj) => (obj.votes > max.votes ? obj : max), blogs[0])
+  const blog = blogs.reduce(
+    (max, obj) => (obj.votes > max.votes ? obj : max),
+    blogs[0]
+  )
   return {
     title: blog.title,
     author: blog.author,
@@ -34,9 +37,15 @@ const favoriteBlog = (blogs) => {
  */
 const mostBlogs = (blogs) => {
   const authors = _.groupBy(blogs, 'author')
-  const authorBlogCount = _.mapValues(authors, (authorBlogs) => authorBlogs.length)
+  const authorBlogCount = _.mapValues(
+    authors,
+    (authorBlogs) => authorBlogs.length
+  )
   //console.log('authorBlogCount:', authorBlogCount)
-  const author = _.maxBy(_.keys(authorBlogCount), (author) => authorBlogCount[author])
+  const author = _.maxBy(
+    _.keys(authorBlogCount),
+    (author) => authorBlogCount[author]
+  )
   //console.log('author:', author)
   const result = {
     author,
@@ -51,7 +60,9 @@ const mostBlogs = (blogs) => {
  */
 const mostLikes = (blogs) => {
   const authors = _.groupBy(blogs, 'author')
-  const authorVotes = _.mapValues(authors, (authorBlogs) => _.sumBy(authorBlogs, 'votes'))
+  const authorVotes = _.mapValues(authors, (authorBlogs) =>
+    _.sumBy(authorBlogs, 'votes')
+  )
   //console.log('authorVotes:', authorVotes)
   const author = _.maxBy(_.keys(authorVotes), (author) => authorVotes[author])
   //console.log('author:', author)
