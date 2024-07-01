@@ -9,14 +9,14 @@ import Login from './components/Login'
 import User from './components/User'
 import Togglable from './components/Togglable'
 import { USER_STORAGE_KEY } from './config/constants'
+import { useDispatch } from 'react-redux'
+import { setNotification } from './reducers/NotificationReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [selectedBlog, setSelectedBlog] = useState(null)
   const [filter, setFilter] = useState('')
-  const [notificationMessage, setNotificationMessage] = useState(null)
-  const [notificationStyle, setNotificationStyle] = useState(null)
   const [user, setUser] = useState(null)
+  const dispatch = useDispatch()
 
   /**
    * useRef hookilla luodaan ref blogFormRef, joka kiinnitetään muistiinpanojen
@@ -105,13 +105,7 @@ const App = () => {
   }
 
   const showNotification = (msg, style) => {
-    setNotificationStyle(style)
-    setNotificationMessage(msg)
-
-    setTimeout(() => {
-      setNotificationStyle(null)
-      setNotificationMessage(null)
-    }, 5000)
+    dispatch(setNotification(msg, style, 5))
   }
 
   /**
@@ -159,17 +153,18 @@ const App = () => {
   const handleDeleteBlog = async (id) => {
     const blog = blogs.find((b) => b.id === id)
     console.log('handleDeleteBlog', blog)
-    if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}?`)) {
-      try {
-        await blogService.remove(id)
-        setBlogs(blogs.filter((b) => b.id !== id))
-        showNotification(
-          `The blog '${blog.title}' has been removed`,
-          style.notification
-        )
-      } catch (error) {
-        showNotification(parseErrorMsg(error), style.error)
-      }
+    if (!window.confirm(`Remove blog '${blog.title}' by ${blog.author}?`)) {
+      return
+    }
+    try {
+      await blogService.remove(id)
+      setBlogs(blogs.filter((b) => b.id !== id))
+      showNotification(
+        `The blog '${blog.title}' has been removed`,
+        style.notification
+      )
+    } catch (error) {
+      showNotification(parseErrorMsg(error), style.error)
     }
   }
 
@@ -179,7 +174,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={notificationMessage} style={notificationStyle} />
+      <Notification />
       <h2>blogs</h2>
       <User user={user} handleLogout={handleLogout} />
       {!user && <Login handleLogin={handleLogin} />}
