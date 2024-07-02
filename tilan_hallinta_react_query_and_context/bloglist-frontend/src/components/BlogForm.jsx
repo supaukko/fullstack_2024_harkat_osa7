@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { createBlogAndNotify } from '../reducers/blogsReducer'
-import { useDispatch } from 'react-redux'
+import PropTypes from 'prop-types'
 
 const defaultBlogData = {
   author: '',
@@ -10,8 +9,7 @@ const defaultBlogData = {
   id: null
 }
 
-const BlogForm = ({ user }) => {
-  const dispatch = useDispatch()
+const BlogForm = ({ handleAddBlog }) => {
   const [blogData, setBlogData] = useState({ ...defaultBlogData })
 
   const header = 'Add a new blog'
@@ -31,16 +29,17 @@ const BlogForm = ({ user }) => {
    * Clear blog data
    */
   const handleClear = (event) => {
+    event.preventDefault()
     setBlogData({ ...defaultBlogData })
   }
 
   /**
-   * Create new blog
+   * Handle the addition of a new blog or the update of an old blog
    * @param {*} event
    */
   const handleSubmit = async (event) => {
     event.preventDefault()
-    dispatch(createBlogAndNotify({ ...blogData }))
+    await handleAddBlog(blogData)
     setBlogData({ ...defaultBlogData })
   }
 
@@ -92,13 +91,15 @@ const BlogForm = ({ user }) => {
             onChange={handleChange}
           />
         </div>
-        <button type="button" onClick={(event) => handleClear(event)}>
-          clear form
-        </button>
+        <button onClick={(event) => handleClear(event)}>clear form</button>
         <button type="submit">create</button>
       </form>
     </div>
   )
+}
+
+BlogForm.propTypes = {
+  handleAddBlog: PropTypes.func.isRequired
 }
 
 export default BlogForm

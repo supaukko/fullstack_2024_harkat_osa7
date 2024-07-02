@@ -19,7 +19,7 @@ h1 {
   margin-bottom: 10px;
 }
 
-.notification, .info {
+.notification {
   color: green;
   background: lightgrey;
   font-size: 20px;

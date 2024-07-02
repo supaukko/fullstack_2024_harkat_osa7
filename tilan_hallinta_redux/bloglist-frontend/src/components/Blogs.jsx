@@ -1,16 +1,36 @@
 import Blog from './Blog'
 import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  updateBlogAndNotify,
+  removeBlogAndNotify
+} from '../reducers/blogsReducer'
 
-const Blogs = ({ blogs, user, handleUpdateBlog, handleDeleteBlog }) => {
+const Blogs = ({ user }) => {
+  const dispatch = useDispatch()
+  const blogs = useSelector((store) => {
+    // console.log('Blogs - useSelector', store)
+    if (store.filter !== '') {
+      return store.blogs.filter((blog) => blog.title?.includes(store.filter))
+    }
+    return store.blogs
+  })
+
+  if (blogs === undefined) {
+    return null
+  }
+
   return (
     <ul className={'list-no-style'}>
       {blogs.map((blog) => (
         <Blog
           key={blog.id}
           blog={blog}
-          handleUpdateBlog={handleUpdateBlog}
+          handleUpdateBlog={() =>
+            dispatch(updateBlogAndNotify({ ...blog, votes: blog.votes + 1 }))
+          }
           user={user}
-          handleDeleteBlog={handleDeleteBlog}
+          handleDeleteBlog={() => dispatch(removeBlogAndNotify(blog))}
         />
       ))}
     </ul>
@@ -18,10 +38,7 @@ const Blogs = ({ blogs, user, handleUpdateBlog, handleDeleteBlog }) => {
 }
 
 Blogs.propTypes = {
-  blogs: PropTypes.array.isRequired,
-  user: PropTypes.object,
-  handleUpdateBlog: PropTypes.func.isRequired,
-  handleDeleteBlog: PropTypes.func.isRequired
+  user: PropTypes.object
 }
 
 Blogs.defaultProps = {

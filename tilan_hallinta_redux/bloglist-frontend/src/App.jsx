@@ -8,13 +8,12 @@ import Notification from './components/Notification'
 import Login from './components/Login'
 import User from './components/User'
 import Togglable from './components/Togglable'
-import { USER_STORAGE_KEY } from './config/constants'
 import { useDispatch } from 'react-redux'
-import { setNotification } from './reducers/NotificationReducer'
+import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogsReducer'
+import { USER_STORAGE_KEY, notificationStyle } from './utils'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [filter, setFilter] = useState('')
   const [user, setUser] = useState(null)
   const dispatch = useDispatch()
 
@@ -25,22 +24,12 @@ const App = () => {
    */
   const blogFormRef = useRef()
 
-  const style = {
-    notification: 'notification',
-    error: 'error'
-  }
-
   /**
    * Blogilistan lataus
    */
   useEffect(() => {
-    const fetchData = async () => {
-      await blogService.getAll().then((blogs) => {
-        setBlogs(blogs)
-      })
-    }
-    fetchData()
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   /**
    * Tarkistetaan onko kirjautunut käyttäjä
@@ -55,24 +44,6 @@ const App = () => {
     }
   }, [])
 
-  /**
-   * Filter
-   * @param {*} event
-   */
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value)
-  }
-
-  /**
-   * Filter based on authors. The list is descending sorted
-   * according to the likes/votes
-   */
-  const filteredBlogs = blogs
-    ?.filter((blog) =>
-      blog.title?.toLocaleLowerCase().includes(filter?.toLocaleLowerCase())
-    )
-    .sort((blog1, blog2) => blog2.votes - blog1.votes)
-
   const handleLogin = async (username, password) => {
     try {
       const usr = await loginService.login({ username, password })
@@ -80,7 +51,7 @@ const App = () => {
       blogService.setToken(usr.token)
       setUser(usr)
     } catch (exception) {
-      showNotification('wrong username or password', style.error)
+      setNotification('wrong username or password', notificationStyle.error, 5)
     }
   }
 
@@ -92,86 +63,6 @@ const App = () => {
     loginService.logout()
   }
 
-  /**
-   * Parse error msg
-   * @param {*} error
-   * @returns
-   */
-  const parseErrorMsg = (error) => {
-    const msg = error.response?.data?.error
-    return msg !== null && msg !== undefined && msg.length > 0
-      ? msg
-      : error.message
-  }
-
-  const showNotification = (msg, style) => {
-    dispatch(setNotification(msg, style, 5))
-  }
-
-  /**
-   * Add a new blog
-   */
-  const handleAddBlog = async (data) => {
-    try {
-      console.log('handleAddBlog', data)
-      const returnedBlog = await blogService.create(data)
-      setBlogs(blogs.concat(returnedBlog))
-      if (blogFormRef.current) {
-        blogFormRef.current.toggleVisibility()
-      }
-      showNotification(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-        style.notification
-      )
-    } catch (error) {
-      showNotification(parseErrorMsg(error), style.error)
-    }
-  }
-
-  /**
-   * Update a blog
-   */
-  const handleUpdateBlog = async (data) => {
-    console.log('handleUpdateBlog', data)
-    try {
-      const returnedBlog = await blogService.update(data.id, data)
-      setBlogs(
-        blogs.map((blog) =>
-          blog.id === returnedBlog.id ? { ...returnedBlog } : blog
-        )
-      )
-      showNotification(`Updated ${returnedBlog.author}`, style.notification)
-    } catch (error) {
-      showNotification(parseErrorMsg(error), style.error)
-    }
-  }
-
-  /**
-   * Handle delete
-   * @param {*} id
-   */
-  const handleDeleteBlog = async (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    console.log('handleDeleteBlog', blog)
-    if (!window.confirm(`Remove blog '${blog.title}' by ${blog.author}?`)) {
-      return
-    }
-    try {
-      await blogService.remove(id)
-      setBlogs(blogs.filter((b) => b.id !== id))
-      showNotification(
-        `The blog '${blog.title}' has been removed`,
-        style.notification
-      )
-    } catch (error) {
-      showNotification(parseErrorMsg(error), style.error)
-    }
-  }
-
-  if (filteredBlogs === null) {
-    return null
-  }
-
   return (
     <div>
       <Notification />
@@ -181,17 +72,12 @@ const App = () => {
       <div>
         {user && (
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm handleAddBlog={handleAddBlog} />
+            <BlogForm user={user} />
           </Togglable>
         )}
         <h2>Blogit</h2>
-        <Filter filter={filter} handleChange={handleFilterChange} />
-        <Blogs
-          blogs={filteredBlogs}
-          user={user}
-          handleDeleteBlog={handleDeleteBlog}
-          handleUpdateBlog={handleUpdateBlog}
-        />
+        <Filter />
+        <Blogs user={user} />
       </div>
     </div>
   )
