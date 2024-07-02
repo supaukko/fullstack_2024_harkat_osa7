@@ -1,6 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
-import blogService from './services/blogs'
-import loginService from './services/login'
+import { useEffect, useRef } from 'react'
 import BlogForm from './components/BlogForm'
 import Blogs from './components/Blogs'
 import Filter from './components/Filter'
@@ -8,14 +6,13 @@ import Notification from './components/Notification'
 import Login from './components/Login'
 import User from './components/User'
 import Togglable from './components/Togglable'
-import { useDispatch } from 'react-redux'
-import { setNotification } from './reducers/notificationReducer'
+import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogsReducer'
-import { USER_STORAGE_KEY, notificationStyle } from './utils'
+import { setLoggerUser, userLogout } from './reducers/userReducer'
 
 const App = () => {
-  const [user, setUser] = useState(null)
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
 
   /**
    * useRef hookilla luodaan ref blogFormRef, joka kiinnitetään muistiinpanojen
@@ -29,38 +26,11 @@ const App = () => {
    */
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(setLoggerUser())
   }, [dispatch])
 
-  /**
-   * Tarkistetaan onko kirjautunut käyttäjä
-   */
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem(USER_STORAGE_KEY)
-    if (loggedUserJSON) {
-      const usr = JSON.parse(loggedUserJSON)
-      setUser(usr)
-      console.log('useEffect', usr)
-      blogService.setToken(usr.token)
-    }
-  }, [])
-
-  const handleLogin = async (username, password) => {
-    try {
-      const usr = await loginService.login({ username, password })
-      window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(usr))
-      blogService.setToken(usr.token)
-      setUser(usr)
-    } catch (exception) {
-      setNotification('wrong username or password', notificationStyle.error, 5)
-    }
-  }
-
-  /**
-   * Logout
-   */
   const handleLogout = () => {
-    setUser(null)
-    loginService.logout()
+    dispatch(userLogout())
   }
 
   return (
@@ -68,7 +38,7 @@ const App = () => {
       <Notification />
       <h2>blogs</h2>
       <User user={user} handleLogout={handleLogout} />
-      {!user && <Login handleLogin={handleLogin} />}
+      {!user && <Login />}
       <div>
         {user && (
           <Togglable buttonLabel="new blog" ref={blogFormRef}>

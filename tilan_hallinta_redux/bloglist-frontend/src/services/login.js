@@ -7,7 +7,7 @@ const login = async (credentials) => {
   return response.data
 }
 
-const logout = async () => {
+const logout = () => {
   window.localStorage.removeItem(USER_STORAGE_KEY)
 }
 
