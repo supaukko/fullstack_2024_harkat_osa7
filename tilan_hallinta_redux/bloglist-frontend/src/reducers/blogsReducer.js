@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import blogService from '../services/blogs'
 import { sortBlogs, parseErrorMsg, notificationStyle } from '../utils'
 import { setNotification } from './notificationReducer'
+import { toggleVisibility } from './togglableReducer'
 
 const initialState = []
 
@@ -55,6 +56,7 @@ export const createBlogAndNotify = (data) => {
     try {
       const newBlog = await blogService.create(data)
       dispatch(addBlog(newBlog))
+      dispatch(toggleVisibility())
       dispatch(
         setNotification(
           `a new blog ${newBlog.title} by ${newBlog.author} added`,

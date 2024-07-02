@@ -15,13 +15,6 @@ const App = () => {
   const user = useSelector((state) => state.user)
 
   /**
-   * useRef hookilla luodaan ref blogFormRef, joka kiinnitetään muistiinpanojen
-   * luomislomakkeen sisältävälle Togglable-komponentille.
-   * Nyt siis muuttuja blogFormRef toimii viitteenä komponenttiin
-   */
-  const blogFormRef = useRef()
-
-  /**
    * Blogilistan lataus
    */
   useEffect(() => {
@@ -41,7 +34,7 @@ const App = () => {
       {!user && <Login />}
       <div>
         {user && (
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+          <Togglable buttonLabel="new blog">
             <BlogForm user={user} />
           </Togglable>
         )}

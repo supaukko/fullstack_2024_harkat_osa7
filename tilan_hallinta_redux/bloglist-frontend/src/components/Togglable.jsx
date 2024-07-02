@@ -1,37 +1,26 @@
-import { useState, useImperativeHandle, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import PropTypes from 'prop-types'
+import { toggleVisibility } from '../reducers/togglableReducer'
+import { useDispatch, useSelector } from 'react-redux'
 
-/**
- * Komponentin luova funktio on kääritty funktiokutsun forwardRef sisälle,
- * jolloin komponentti pääsee käsiksi sille määriteltyyn refiin.
- * Komponentti tarjoaa useImperativeHandle-hookin avulla sisäisesti
- * määritellyn funktionsa toggleVisibility ulkopuolelta kutsuttavaksi
- */
-const Togglable = forwardRef((props, ref) => {
-  const [visible, setVisible] = useState(false)
+const Togglable = forwardRef((props) => {
+  const dispatch = useDispatch()
+  const togglable = useSelector((store) => store.togglable)
+  console.log('Togglable', togglable)
 
-  console.log('Togglable', props, ref)
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
-  }
-
-  useImperativeHandle(ref, () => {
-    return {
-      toggleVisibility
-    }
-  })
+  const hideWhenVisible = { display: togglable.visible ? 'none' : '' }
+  const showWhenVisible = { display: togglable.visible ? '' : 'none' }
 
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <button onClick={() => dispatch(toggleVisibility())}>
+          {props.buttonLabel}
+        </button>
       </div>
       <div style={showWhenVisible} className="togglableContent">
         <div className="border">{props.children}</div>
-        <button onClick={toggleVisibility}>cancel</button>
+        <button onClick={() => dispatch(toggleVisibility())}>cancel</button>
       </div>
     </div>
   )

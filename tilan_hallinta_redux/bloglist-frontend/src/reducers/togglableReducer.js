@@ -8,7 +8,8 @@ const toggleableSlice = createSlice({
       return action.payload
     },
     toggleVisibility(state, action) {
-      return !state.visible
+      console.log('toggleVisibility', action, JSON.stringify(state))
+      state.visible = !state.visible
     }
   }
 })
