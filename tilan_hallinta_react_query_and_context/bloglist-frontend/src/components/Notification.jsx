@@ -1,21 +1,14 @@
-import PropTypes from 'prop-types'
+import { useNotificationValue } from '../contexts/NotificationContext';
 
-const Notification = ({ message, style }) => {
-  if (message === null || style === null) {
+const Notification = () => {
+  const { notification } = useNotificationValue();
+  notification
+  console.log('Notification', notification)
+  if (notification.message === null || notification.style === null) {
     return null
   }
 
-  return <div className={style}>{message}</div>
-}
-
-Notification.propTypes = {
-  message: PropTypes.string,
-  style: PropTypes.string
-}
-
-Notification.defaultProps = {
-  message: null,
-  style: null
+  return <div className={notification.style}>{notification.message}</div>
 }
 
 export default Notification

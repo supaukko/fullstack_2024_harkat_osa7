@@ -9,14 +9,13 @@ import Login from './components/Login'
 import User from './components/User'
 import Togglable from './components/Togglable'
 import { USER_STORAGE_KEY } from './config/constants'
+import { useAddNotification } from './contexts/NotificationContext'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [selectedBlog, setSelectedBlog] = useState(null)
   const [filter, setFilter] = useState('')
-  const [notificationMessage, setNotificationMessage] = useState(null)
-  const [notificationStyle, setNotificationStyle] = useState(null)
   const [user, setUser] = useState(null)
+  const addNotification = useAddNotification()
 
   /**
    * useRef hookilla luodaan ref blogFormRef, joka kiinnitetään muistiinpanojen
@@ -26,7 +25,7 @@ const App = () => {
   const blogFormRef = useRef()
 
   const style = {
-    notification: 'notification',
+    info: 'info',
     error: 'error'
   }
 
@@ -105,13 +104,7 @@ const App = () => {
   }
 
   const showNotification = (msg, style) => {
-    setNotificationStyle(style)
-    setNotificationMessage(msg)
-
-    setTimeout(() => {
-      setNotificationStyle(null)
-      setNotificationMessage(null)
-    }, 5000)
+    addNotification(msg, style)
   }
 
   /**
@@ -127,7 +120,7 @@ const App = () => {
       }
       showNotification(
         `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-        style.notification
+        style.info
       )
     } catch (error) {
       showNotification(parseErrorMsg(error), style.error)
@@ -146,7 +139,7 @@ const App = () => {
           blog.id === returnedBlog.id ? { ...returnedBlog } : blog
         )
       )
-      showNotification(`Updated ${returnedBlog.author}`, style.notification)
+      showNotification(`Updated ${returnedBlog.author}`, style.info)
     } catch (error) {
       showNotification(parseErrorMsg(error), style.error)
     }
@@ -165,7 +158,7 @@ const App = () => {
         setBlogs(blogs.filter((b) => b.id !== id))
         showNotification(
           `The blog '${blog.title}' has been removed`,
-          style.notification
+          style.info
         )
       } catch (error) {
         showNotification(parseErrorMsg(error), style.error)
@@ -179,7 +172,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={notificationMessage} style={notificationStyle} />
+      <Notification />
       <h2>blogs</h2>
       <User user={user} handleLogout={handleLogout} />
       {!user && <Login handleLogin={handleLogin} />}

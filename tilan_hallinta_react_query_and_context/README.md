@@ -255,3 +255,174 @@ Tehdään `.prettierignore` tiedosto ja lisätään sinne mm. bloglist-frontend 
 
 
 ## Tilan hallinta: React Query ja context
+
+https://fullstackopen.com/osa6/react_query_use_reducer_ja_context
+
+
+### React Query
+
+ [React Query (/ Tanstack)](https://tanstack.com/query/latest) ‑kirjasto avulla voidaan säilyttää ja hallinnoida palvelimelta haettua dataa
+
+ ```
+ npm install @tanstack/react-query
+ ```
+
+Kirjaston käyttö edellyttää providerin käyttöä esim. main.js tiedostossa:
+
+```
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+
+const queryClient = new QueryClient()
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <QueryClientProvider client={queryClient}>
+    <App />
+  </QueryClientProvider>
+)
+```
+
+Datan hakeminen palvelimelta ja talletus palvelimelle tapahtuu seuraavasti:
+```
+  import { useQuery, useMutation, useQueryClient } from 'react-query'
+
+  const baseUrl = 'http://localhost:3001/notes'
+
+  const getNotes = () =>
+    axios.get(baseUrl).then(res => res.data)
+
+  const createNote = newNote =>
+    axios.post(baseUrl, newNote).then(res => res.data)
+
+  const updateNote = updatedNote =>
+    axios.put(`${baseUrl}/${updatedNote.id}`, updatedNote).then(res => res.data)
+
+  // Query clientin avulla voidaan puskuroitu data invalidoida, jolloin päivittynyt 
+  // data voidaan renderöidä
+  const queryClient = useQueryClient()
+
+  // Update data
+  const updateNoteMutation = useMutation(updateNote, {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
+    },
+  })
+  const toggleImportance = (note) => {
+    updateNoteMutation.mutate({...note, important: !note.important })
+  }
+
+  // Save data. Data haetaan uudelleen palvelimelta - ei kovin perffiystävällistä
+  const newNoteMutation = useMutation({
+    mutationFn: createNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
+    },
+  })
+
+  // Save data. Huolehditaan itse muuttuneen tiedon päivityksestä
+  const newNoteMutationOptimiPerformanceOptimization = useMutation(createNote, {
+    onSuccess: (newNote) => {
+      const notes = queryClient.getQueryData('notes')
+      queryClient.setQueryData('notes', notes.concat(newNote))
+    }
+  })
+
+  const addNote = async (newNote) => {
+    newNoteMutation.mutate(newNote)
+  }
+
+  // Get data
+  const result = useQuery({
+    queryKey: ['notes'],
+    queryFn: getNotes
+  })
+
+  if ( result.isLoading ) {
+    return <div>loading data...</div>
+  }
+
+  const notes = result.data
+
+```
+
+### Context API
+
+Reactin sisäänrakennettu Context API tuo tilanteeseen ratkaisun. Reactin konteksti on eräänlainen sovelluksen globaali tila, johon on mahdollista antaa suora pääsy mille tahansa komponentille.
+
+```
+CounterContext.js:
+
+import { createContext, useReducer } from 'react'
+
+const counterReducer = (state, action) => {
+  switch (action.type) {
+    case "INC":
+        return state + 1
+    case "DEC":
+        return state - 1
+    case "ZERO":
+        return 0
+    default:
+        return state
+  }
+}
+
+const CounterContext = createContext()
+
+export const CounterContextProvider = (props) => {
+  const [counter, counterDispatch] = useReducer(counterReducer, 0)
+
+  return (
+    <CounterContext.Provider value={[counter, counterDispatch]}>
+      {props.children}
+    </CounterContext.Provider>
+  )
+}
+
+export default CounterContext
+
+main.js:
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import { CounterContextProvider } from './CounterContext'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <CounterContextProvider>
+    <App />
+  </CounterContextProvider>
+)
+
+App.jsx:
+import { createContext, useReducer, useContext } from 'react'
+import CounterContext from './CounterContext'
+
+const Display = () => {
+  const [counter, dispatch] = useContext(CounterContext)
+  return <div>
+    {counter}
+  </div>
+}
+
+
+const Button = ({ type, label }) => {
+  const [counter, dispatch] = useContext(CounterContext)
+  return (
+    <button onClick={() => dispatch({ type })}>
+      {label}
+    </button>
+  )
+}
+
+
+const App = () => {
+  return (
+    <Display />
+    <div>
+      <Button type='INC' label='+' />
+      <Button type='DEC' label='-' />
+      <Button type='ZERO' label='0' />
+    </div>
+  )
+}
+
+```
