@@ -2,9 +2,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import blogService from '../services/blogs'
 
 const KEY = 'blogs'
-const queryClient = useQueryClient();
 
 const useInvalidateBlogs = () => {
+  const queryClient = useQueryClient();
   queryClient.invalidateQueries({ queryKey: [KEY] })
 }
 
@@ -17,6 +17,7 @@ const useInvalidateBlogs = () => {
  * Funktion useQuery paluuarvo on olio, joka kertoo kyselyn tilan
  */
 const useBlogs = () => {
+  const queryClient = useQueryClient();
   return useQuery({
     queryKey: [KEY],
     queryFn: blogService.getAll,
@@ -26,8 +27,9 @@ const useBlogs = () => {
 }
 
 const useUpdateBlog = () => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: blogService.update,
+    mutationFn: async ({ id, data }) => await blogService.update(id, data),
     onSuccess: (updatedBlog) => {
       const previousBlogs = queryClient.getQueryData({ queryKey: [KEY] });
       // console.log('useUpdateBlog', data, previousBlogs)
@@ -49,6 +51,7 @@ const useUpdateBlog = () => {
 }
 
 const useCreateBlog = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: blogService.create,
     onSuccess: (newBlog) => {
@@ -69,6 +72,7 @@ const useCreateBlog = () => {
 }
 
 const useRemoveBlog = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: blogService.remove,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [KEY] }),

@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useUpdateBlog, useRemoveBlog } from '../hooks/useBlogs'
 
 const Blog = ({ blog, user, handleDeleteBlog, handleUpdateBlog }) => {
   const [isVisible, setIsVisible] = useState(false)
+  const updateBlog = useUpdateBlog()
+  const removeBlog = useRemoveBlog()
 
   //console.log(`Blog user=${user?.username}`, blog)
 

@@ -1,4 +1,4 @@
-import { useState, useImperativeHandle, forwardRef } from 'react'
+import { useVisibilityValue, useVisibilityDispatch } from '../contexts/VisibilityContext';
 import PropTypes from 'prop-types'
 
 /**
@@ -7,22 +7,16 @@ import PropTypes from 'prop-types'
  * Komponentti tarjoaa useImperativeHandle-hookin avulla sisäisesti
  * määritellyn funktionsa toggleVisibility ulkopuolelta kutsuttavaksi
  */
-const Togglable = forwardRef((props, ref) => {
-  const [visible, setVisible] = useState(false)
+const Togglable = (props) => {
 
-  console.log('Togglable', props, ref)
+  const visibilityDispatch = useVisibilityDispatch()
+  const { visible } = useVisibilityValue()
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => {
-    setVisible(!visible)
+    visibilityDispatch({ type: 'BLOG_FORM_VISIBILITY' });
   }
-
-  useImperativeHandle(ref, () => {
-    return {
-      toggleVisibility
-    }
-  })
 
   return (
     <div>
@@ -35,7 +29,7 @@ const Togglable = forwardRef((props, ref) => {
       </div>
     </div>
   )
-})
+}
 
 Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired

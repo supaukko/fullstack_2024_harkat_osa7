@@ -1,6 +1,4 @@
 import Blog from './Blog'
-
-import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const Blogs = ({ blogs, user, handleUpdateBlog, handleDeleteBlog }) => {

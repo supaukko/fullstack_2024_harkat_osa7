@@ -10,36 +10,30 @@ import User from './components/User'
 import Togglable from './components/Togglable'
 import { USER_STORAGE_KEY } from './config/constants'
 import { useAddNotification } from './contexts/NotificationContext'
+import { useVisibilityDispatch } from './contexts/VisibilityContext';
+import { useBlogs, useUpdateBlog, useCreateBlog, useRemoveBlog } from './hooks/useBlogs'
+
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [filter, setFilter] = useState('')
   const [user, setUser] = useState(null)
   const addNotification = useAddNotification()
+  const { isPending, isError, data: blogs, error } = useBlogs()
+  const createBlog = useCreateBlog()
+  const updateBlog = useUpdateBlog()
 
   /**
    * useRef hookilla luodaan ref blogFormRef, joka kiinnitetään muistiinpanojen
    * luomislomakkeen sisältävälle Togglable-komponentille.
    * Nyt siis muuttuja blogFormRef toimii viitteenä komponenttiin
    */
-  const blogFormRef = useRef()
+  //const blogFormRef = useRef()
+  const blogFormVisibilityDispatch = useVisibilityDispatch()
 
   const style = {
     info: 'info',
     error: 'error'
   }
-
-  /**
-   * Blogilistan lataus
-   */
-  useEffect(() => {
-    const fetchData = async () => {
-      await blogService.getAll().then((blogs) => {
-        setBlogs(blogs)
-      })
-    }
-    fetchData()
-  }, [])
 
   /**
    * Tarkistetaan onko kirjautunut käyttäjä
@@ -113,13 +107,10 @@ const App = () => {
   const handleAddBlog = async (data) => {
     try {
       console.log('handleAddBlog', data)
-      const returnedBlog = await blogService.create(data)
-      setBlogs(blogs.concat(returnedBlog))
-      if (blogFormRef.current) {
-        blogFormRef.current.toggleVisibility()
-      }
+      await createBlog.mutateAsync(data)
+      blogFormVisibilityDispatch({ type: 'BLOG_FORM_VISIBILITY' });
       showNotification(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+        `a new blog ${data.title} by ${data.author} added`,
         style.info
       )
     } catch (error) {
@@ -133,13 +124,8 @@ const App = () => {
   const handleUpdateBlog = async (data) => {
     console.log('handleUpdateBlog', data)
     try {
-      const returnedBlog = await blogService.update(data.id, data)
-      setBlogs(
-        blogs.map((blog) =>
-          blog.id === returnedBlog.id ? { ...returnedBlog } : blog
-        )
-      )
-      showNotification(`Updated ${returnedBlog.author}`, style.info)
+      await updateBlog.mutateAsync({ id: data.id, data })
+      showNotification(`Updated ${data.author}`, style.info)
     } catch (error) {
       showNotification(parseErrorMsg(error), style.error)
     }
@@ -166,6 +152,14 @@ const App = () => {
     }
   }
 
+  if (isPending) {
+    return <span>Loading...</span>
+  }
+
+  if (isError) {
+    return <span>Service not available due to {error.message}</span>
+  }
+
   if (filteredBlogs === null) {
     return null
   }
@@ -178,7 +172,7 @@ const App = () => {
       {!user && <Login handleLogin={handleLogin} />}
       <div>
         {user && (
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+          <Togglable buttonLabel="new blog">
             <BlogForm handleAddBlog={handleAddBlog} />
           </Togglable>
         )}

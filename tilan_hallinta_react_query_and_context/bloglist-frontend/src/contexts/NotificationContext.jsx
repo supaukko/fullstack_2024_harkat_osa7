@@ -8,9 +8,15 @@ const initialState = {
 }
 
 const notificationReducer = (state, action) => {
-  return {
-    ...state,
-    notification: action.payload
+  switch (action.type) {
+    case "SHOW":
+    case "HIDE":
+      return {
+        ...state,
+        notification: action.payload
+      }
+    default:
+        return state
   }
 }
 
@@ -19,7 +25,7 @@ const NotificationContext = createContext()
 export const useNotificationValue = () => {
   const notificationAndDispatch = useContext(NotificationContext);
   if (notificationAndDispatch !== undefined) {
-    console.log('useNotificationValue', notificationAndDispatch)
+    // console.log('useNotificationValue', notificationAndDispatch)
     return notificationAndDispatch[0];
   }
   return null
