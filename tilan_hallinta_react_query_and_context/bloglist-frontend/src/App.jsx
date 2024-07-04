@@ -8,15 +8,15 @@ import Notification from './components/Notification'
 import Login from './components/Login'
 import User from './components/User'
 import Togglable from './components/Togglable'
-import { USER_STORAGE_KEY } from './config/constants'
 import { useAddNotification } from './contexts/NotificationContext'
+import { useFilterValue } from './contexts/FilterContext'
 import { useBlogs } from './hooks/useBlogs'
-import { notificationStyle } from './utils'
+import { notificationStyle, USER_STORAGE_KEY } from './utils'
 
 const App = () => {
-  const [filter, setFilter] = useState('')
   const [user, setUser] = useState(null)
   const addNotification = useAddNotification()
+  const { filter } = useFilterValue()
   const { isPending, isError, data: blogs, error } = useBlogs()
 
   /**
@@ -33,13 +33,6 @@ const App = () => {
   }, [])
 
   console.log('App', user)
-  /**
-   * Filter
-   * @param {*} event
-   */
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value)
-  }
 
   /**
    * Filter based on authors. The list is descending sorted
@@ -93,7 +86,7 @@ const App = () => {
           </Togglable>
         )}
         <h2>Blogit</h2>
-        <Filter filter={filter} handleChange={handleFilterChange} />
+        <Filter />
         <Blogs blogs={filteredBlogs} user={user} />
       </div>
     </div>

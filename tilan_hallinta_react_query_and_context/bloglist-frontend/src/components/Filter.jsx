@@ -1,7 +1,19 @@
-import PropTypes from 'prop-types'
-function Filter({ filter, handleChange }) {
+import { useFilterValue, useChangeFilter } from '../contexts/FilterContext'
+function Filter() {
+  const { filter } = useFilterValue()
+  const changeFilter = useChangeFilter()
+
+  const style = {
+    margin: 10
+  }
+
+  const handleChange = (event) => {
+    console.log('Filter - handleChange', event.target.value)
+    changeFilter(event.target.value)
+  }
+
   return (
-    <div>
+    <div style={style}>
       <label htmlFor="filter">Suodata</label>
       <input
         id="filter"
@@ -13,11 +25,6 @@ function Filter({ filter, handleChange }) {
       />
     </div>
   )
-}
-
-Filter.propTypes = {
-  filter: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired
 }
 
 export default Filter

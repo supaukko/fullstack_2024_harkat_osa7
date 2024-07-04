@@ -14,3 +14,5 @@ export const parseErrorMsg = (error) => {
     ? msg
     : error.message
 }
+
+export const USER_STORAGE_KEY = 'loggedBloglistUser"'
