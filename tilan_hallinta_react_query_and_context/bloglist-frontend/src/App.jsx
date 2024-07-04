@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react'
-import blogService from './services/blogs'
-import loginService from './services/login'
 import BlogForm from './components/BlogForm'
 import Blogs from './components/Blogs'
 import Filter from './components/Filter'
 import Notification from './components/Notification'
 import Login from './components/Login'
-import User from './components/User'
+import LoggedInUser from './components/LoggedInUser'
 import Togglable from './components/Togglable'
+import UserList from './components/UserList'
 import { useAddNotification } from './contexts/NotificationContext'
 import { useFilterValue } from './contexts/FilterContext'
 import { useBlogs } from './hooks/useBlogs'
 import { useUserValue, useLogoutUser } from './contexts/UserContext'
+import { Routes, Route, Link } from 'react-router-dom'
 
 const App = () => {
   const { user } = useUserValue()
@@ -40,7 +39,7 @@ const App = () => {
     <div>
       <Notification />
       <h2>blogs</h2>
-      <User user={user} handleLogout={logoutUser} />
+      <LoggedInUser user={user} handleLogout={logoutUser} />
       {!user && <Login />}
       <div>
         {user && (
@@ -51,6 +50,7 @@ const App = () => {
         <h2>Blogit</h2>
         <Filter />
         <Blogs blogs={filteredBlogs} user={user} />
+        <UserList />
       </div>
     </div>
   )

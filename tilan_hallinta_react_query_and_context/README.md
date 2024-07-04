@@ -426,3 +426,20 @@ const App = () => {
 }
 
 ```
+
+### Tehtävät
+
+#### 7.14: käyttäjien näkymä
+
+ React Router -kirjaston avulla voidaan hallita React-sovelluksen navigaatio
+ 
+ ```
+npm install react-router-dom
+ 
+
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link
+} from 'react-router-dom'
+
+ ```

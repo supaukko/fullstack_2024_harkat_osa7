@@ -1,6 +1,5 @@
 import { createContext, useReducer, useContext, useEffect } from 'react'
 import loginService from '../services/login'
-import blogService from '../services/blogs'
 import { USER_STORAGE_KEY, notificationStyle } from '../utils'
 import { useAddNotification } from './NotificationContext'
 
@@ -57,7 +56,7 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     if (state.user) {
       window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(state.user))
-      blogService.setToken(state.user.token)
+      loginService.setToken(state.user.token)
     } else {
       window.localStorage.removeItem(USER_STORAGE_KEY)
     }
@@ -66,7 +65,6 @@ export const UserContextProvider = ({ children }) => {
   const loginUser = async (username, password) => {
     try {
       const user = await loginService.login({ username, password })
-      blogService.setToken(user.token)
       userDispatch({
         type: 'LOGIN',
         payload: { user: user }
