@@ -7,8 +7,8 @@ const login = async (credentials) => {
   return response.data
 }
 
-const logout = async () => {
-  window.localStorage.removeItem(USER_STORAGE_KEY)
+const logout = () => {
+  console.log('logout')
 }
 
 export default { login, logout }
