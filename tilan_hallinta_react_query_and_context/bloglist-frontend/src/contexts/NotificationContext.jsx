@@ -22,24 +22,18 @@ const notificationReducer = (state, action) => {
 
 const NotificationContext = createContext()
 
-export const useNotificationValue = () => {
-  const notificationAndDispatch = useContext(NotificationContext)
-  if (notificationAndDispatch !== undefined) {
-    return notificationAndDispatch[0]
-  }
-  return null
-}
-
 export function useNotification() {
   return useContext(NotificationContext)
 }
 
+export const useNotificationValue = () => {
+  const context = useContext(NotificationContext)
+  return context !== undefined ? context[0] : null
+}
+
 export const useAddNotification = () => {
-  const notificationAndDispatch = useContext(NotificationContext)
-  if (notificationAndDispatch !== undefined) {
-    return notificationAndDispatch[2]
-  }
-  return null
+  const context = useContext(NotificationContext)
+  return context !== undefined ? context[2] : null
 }
 
 export const NotificationContextProvider = (props) => {
