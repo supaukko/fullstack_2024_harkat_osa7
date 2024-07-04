@@ -10,9 +10,13 @@ import User from './components/User'
 import Togglable from './components/Togglable'
 import { USER_STORAGE_KEY } from './config/constants'
 import { useAddNotification } from './contexts/NotificationContext'
-import { useVisibilityDispatch } from './contexts/VisibilityContext';
-import { useBlogs, useUpdateBlog, useCreateBlog, useRemoveBlog } from './hooks/useBlogs'
-
+import { useVisibilityDispatch } from './contexts/VisibilityContext'
+import {
+  useBlogs,
+  useUpdateBlog,
+  useCreateBlog,
+  useRemoveBlog
+} from './hooks/useBlogs'
 
 const App = () => {
   const [filter, setFilter] = useState('')
@@ -21,13 +25,7 @@ const App = () => {
   const { isPending, isError, data: blogs, error } = useBlogs()
   const createBlog = useCreateBlog()
   const updateBlog = useUpdateBlog()
-
-  /**
-   * useRef hookilla luodaan ref blogFormRef, joka kiinnitetään muistiinpanojen
-   * luomislomakkeen sisältävälle Togglable-komponentille.
-   * Nyt siis muuttuja blogFormRef toimii viitteenä komponenttiin
-   */
-  //const blogFormRef = useRef()
+  const removeBlog = useRemoveBlog()
   const blogFormVisibilityDispatch = useVisibilityDispatch()
 
   const style = {
@@ -108,7 +106,7 @@ const App = () => {
     try {
       console.log('handleAddBlog', data)
       await createBlog.mutateAsync(data)
-      blogFormVisibilityDispatch({ type: 'BLOG_FORM_VISIBILITY' });
+      blogFormVisibilityDispatch({ type: 'BLOG_FORM_VISIBILITY' })
       showNotification(
         `a new blog ${data.title} by ${data.author} added`,
         style.info
@@ -140,8 +138,7 @@ const App = () => {
     console.log('handleDeleteBlog', blog)
     if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}?`)) {
       try {
-        await blogService.remove(id)
-        setBlogs(blogs.filter((b) => b.id !== id))
+        await removeBlog.mutateAsync(id)
         showNotification(
           `The blog '${blog.title}' has been removed`,
           style.info
