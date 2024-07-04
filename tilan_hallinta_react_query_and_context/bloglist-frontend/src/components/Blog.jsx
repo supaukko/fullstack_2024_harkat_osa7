@@ -1,17 +1,14 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useUpdateBlog, useRemoveBlog } from '../hooks/useBlogs'
 
 const Blog = ({ blog, user, handleDeleteBlog, handleUpdateBlog }) => {
   const [isVisible, setIsVisible] = useState(false)
-  const updateBlog = useUpdateBlog()
-  const removeBlog = useRemoveBlog()
 
   //console.log(`Blog user=${user?.username}`, blog)
 
   const handleIncreaseLikes = () => {
     const updatedBlog = { ...blog, ['votes']: blog.votes + 1 }
-    console.log('handleIncreaseLikes', updatedBlog)
+    // console.log('*** handleIncreaseLikes', updatedBlog)
     handleUpdateBlog(updatedBlog)
   }
 
@@ -53,7 +50,7 @@ const Blog = ({ blog, user, handleDeleteBlog, handleUpdateBlog }) => {
           {!isRemoveEnabled && (
             <button
               className={'blue-button'}
-              onClick={() => handleDeleteBlog(blog.id)}
+              onClick={() => handleDeleteBlog(blog)}
               disabled={isRemoveEnabled}
             >
               remove

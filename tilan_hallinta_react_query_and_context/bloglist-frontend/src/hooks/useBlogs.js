@@ -4,7 +4,7 @@ import blogService from '../services/blogs'
 const KEY = 'blogs'
 
 const useInvalidateBlogs = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   queryClient.invalidateQueries({ queryKey: [KEY] })
 }
 
@@ -13,11 +13,11 @@ const useInvalidateBlogs = () => {
  * Axiosin metodikutsu on kääritty useQuery-funktiolla muodostetuksi kyselyksi.
  * Funktiokutsun ensimmäisenä parametrina on merkkijono, joka toimii
  * avaimena määriteltyyn kyselyyn.
- * 
+ *
  * Funktion useQuery paluuarvo on olio, joka kertoo kyselyn tilan
  */
 const useBlogs = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   return useQuery({
     queryKey: [KEY],
     queryFn: blogService.getAll,
@@ -27,61 +27,65 @@ const useBlogs = () => {
 }
 
 const useUpdateBlog = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({ id, data }) => await blogService.update(id, data),
     onSuccess: (updatedBlog) => {
-      const previousBlogs = queryClient.getQueryData({ queryKey: [KEY] });
-      // console.log('useUpdateBlog', data, previousBlogs)
+      const previousBlogs = queryClient.getQueryData({ queryKey: [KEY] })
+      // console.log('useUpdateBlog', updatedBlog, previousBlogs)
       if (previousBlogs) {
-        queryClient.setQueryData(KEY, (previousBlogs) => 
-          previousBlogs.map((item) => 
+        queryClient.setQueryData(KEY, (previousBlogs) =>
+          previousBlogs.map((item) =>
             item.id === updatedBlog.id ? { ...item, ...updatedBlog } : item
           )
         )
-      }
-      else {
+      } else {
         queryClient.invalidateQueries({ queryKey: [KEY] })
       }
     },
     onError: (error) => {
-      console.error('Update error:', error.response.data.error);
+      console.error('Update error:', error.response.data.error)
     }
   })
 }
 
 const useCreateBlog = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: blogService.create,
     onSuccess: (newBlog) => {
-      const previousBlogs = queryClient.getQueryData(KEY);
-      
+      const previousBlogs = queryClient.getQueryData(KEY)
+
       if (previousBlogs) {
-        queryClient.setQueryData({ queryKey: [KEY] },
-          (previousBlogs) => [...previousBlogs, ...newBlog])
-      }
-      else {
+        queryClient.setQueryData({ queryKey: [KEY] }, (previousBlogs) => [
+          ...previousBlogs,
+          ...newBlog
+        ])
+      } else {
         queryClient.invalidateQueries({ queryKey: [KEY] })
       }
     },
     onError: (error) => {
-      console.error('Create error:', error.response.data.error);
+      console.error('Create error:', error.response.data.error)
     }
   })
 }
 
 const useRemoveBlog = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: blogService.remove,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [KEY] }),
     onError: (error) => {
-      console.error('Update error:', error.response.data.error);
+      console.error('Update error:', error.response.data.error)
     }
   })
 }
 
-export { useInvalidateBlogs, useBlogs, useUpdateBlog, useCreateBlog, useRemoveBlog }
-
-
+export {
+  useInvalidateBlogs,
+  useBlogs,
+  useUpdateBlog,
+  useCreateBlog,
+  useRemoveBlog
+}

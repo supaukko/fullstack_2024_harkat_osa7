@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
@@ -10,28 +10,14 @@ import User from './components/User'
 import Togglable from './components/Togglable'
 import { USER_STORAGE_KEY } from './config/constants'
 import { useAddNotification } from './contexts/NotificationContext'
-import { useVisibilityDispatch } from './contexts/VisibilityContext'
-import {
-  useBlogs,
-  useUpdateBlog,
-  useCreateBlog,
-  useRemoveBlog
-} from './hooks/useBlogs'
+import { useBlogs } from './hooks/useBlogs'
+import { notificationStyle } from './utils'
 
 const App = () => {
   const [filter, setFilter] = useState('')
   const [user, setUser] = useState(null)
   const addNotification = useAddNotification()
   const { isPending, isError, data: blogs, error } = useBlogs()
-  const createBlog = useCreateBlog()
-  const updateBlog = useUpdateBlog()
-  const removeBlog = useRemoveBlog()
-  const blogFormVisibilityDispatch = useVisibilityDispatch()
-
-  const style = {
-    info: 'info',
-    error: 'error'
-  }
 
   /**
    * Tarkistetaan onko kirjautunut käyttäjä
@@ -46,6 +32,7 @@ const App = () => {
     }
   }, [])
 
+  console.log('App', user)
   /**
    * Filter
    * @param {*} event
@@ -64,6 +51,8 @@ const App = () => {
     )
     .sort((blog1, blog2) => blog2.votes - blog1.votes)
 
+  // console.log('**** App', blogs, filteredBlogs)
+
   const handleLogin = async (username, password) => {
     try {
       const usr = await loginService.login({ username, password })
@@ -71,7 +60,7 @@ const App = () => {
       blogService.setToken(usr.token)
       setUser(usr)
     } catch (exception) {
-      showNotification('wrong username or password', style.error)
+      addNotification('wrong username or password', notificationStyle.error)
     }
   }
 
@@ -83,82 +72,12 @@ const App = () => {
     loginService.logout()
   }
 
-  /**
-   * Parse error msg
-   * @param {*} error
-   * @returns
-   */
-  const parseErrorMsg = (error) => {
-    const msg = error.response?.data?.error
-    return msg !== null && msg !== undefined && msg.length > 0
-      ? msg
-      : error.message
-  }
-
-  const showNotification = (msg, style) => {
-    addNotification(msg, style)
-  }
-
-  /**
-   * Add a new blog
-   */
-  const handleAddBlog = async (data) => {
-    try {
-      console.log('handleAddBlog', data)
-      await createBlog.mutateAsync(data)
-      blogFormVisibilityDispatch({ type: 'BLOG_FORM_VISIBILITY' })
-      showNotification(
-        `a new blog ${data.title} by ${data.author} added`,
-        style.info
-      )
-    } catch (error) {
-      showNotification(parseErrorMsg(error), style.error)
-    }
-  }
-
-  /**
-   * Update a blog
-   */
-  const handleUpdateBlog = async (data) => {
-    console.log('handleUpdateBlog', data)
-    try {
-      await updateBlog.mutateAsync({ id: data.id, data })
-      showNotification(`Updated ${data.author}`, style.info)
-    } catch (error) {
-      showNotification(parseErrorMsg(error), style.error)
-    }
-  }
-
-  /**
-   * Handle delete
-   * @param {*} id
-   */
-  const handleDeleteBlog = async (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    console.log('handleDeleteBlog', blog)
-    if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}?`)) {
-      try {
-        await removeBlog.mutateAsync(id)
-        showNotification(
-          `The blog '${blog.title}' has been removed`,
-          style.info
-        )
-      } catch (error) {
-        showNotification(parseErrorMsg(error), style.error)
-      }
-    }
-  }
-
   if (isPending) {
     return <span>Loading...</span>
   }
 
   if (isError) {
     return <span>Service not available due to {error.message}</span>
-  }
-
-  if (filteredBlogs === null) {
-    return null
   }
 
   return (
@@ -170,17 +89,12 @@ const App = () => {
       <div>
         {user && (
           <Togglable buttonLabel="new blog">
-            <BlogForm handleAddBlog={handleAddBlog} />
+            <BlogForm />
           </Togglable>
         )}
         <h2>Blogit</h2>
         <Filter filter={filter} handleChange={handleFilterChange} />
-        <Blogs
-          blogs={filteredBlogs}
-          user={user}
-          handleDeleteBlog={handleDeleteBlog}
-          handleUpdateBlog={handleUpdateBlog}
-        />
+        <Blogs blogs={filteredBlogs} user={user} />
       </div>
     </div>
   )

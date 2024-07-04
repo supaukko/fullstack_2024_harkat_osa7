@@ -28,12 +28,13 @@ const create = async (newObject) => {
 }
 
 const update = async (id, object) => {
-  console.log(`*** Blogs - update id=${id}`, object)
+  // console.log(`*** update id=${id}`, object)
   const response = await axios.put(`${baseUrl}/${id}`, object, getConfig())
   return response.data
 }
 
 const remove = async (id) => {
+  // console.log('*** remove', id)
   await axios.delete(`${baseUrl}/${id}`, getConfig())
 }
 

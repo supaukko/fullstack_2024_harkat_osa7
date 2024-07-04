@@ -1,4 +1,7 @@
-import { useVisibilityValue, useVisibilityDispatch } from '../contexts/VisibilityContext';
+import {
+  useVisibilityValue,
+  useVisibilityDispatch
+} from '../contexts/VisibilityContext'
 import PropTypes from 'prop-types'
 
 /**
@@ -8,14 +11,13 @@ import PropTypes from 'prop-types'
  * määritellyn funktionsa toggleVisibility ulkopuolelta kutsuttavaksi
  */
 const Togglable = (props) => {
-
   const visibilityDispatch = useVisibilityDispatch()
-  const { visible } = useVisibilityValue()
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
+  const data = useVisibilityValue()
+  const hideWhenVisible = { display: data?.visible ? 'none' : '' }
+  const showWhenVisible = { display: data?.visible ? '' : 'none' }
 
   const toggleVisibility = () => {
-    visibilityDispatch({ type: 'BLOG_FORM_VISIBILITY' });
+    visibilityDispatch({ type: 'BLOG_FORM_VISIBILITY' })
   }
 
   return (

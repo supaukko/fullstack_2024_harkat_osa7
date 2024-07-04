@@ -1,5 +1,8 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
+import { useAddNotification } from '../contexts/NotificationContext'
+import { useVisibilityDispatch } from '../contexts/VisibilityContext'
+import { useCreateBlog } from '../hooks/useBlogs'
+import { notificationStyle, parseErrorMsg } from '../utils'
 
 const defaultBlogData = {
   author: '',
@@ -9,9 +12,11 @@ const defaultBlogData = {
   id: null
 }
 
-const BlogForm = ({ handleAddBlog }) => {
+const BlogForm = () => {
+  const createBlog = useCreateBlog()
+  const addNotification = useAddNotification()
   const [blogData, setBlogData] = useState({ ...defaultBlogData })
-
+  const blogFormVisibilityDispatch = useVisibilityDispatch()
   const header = 'Add a new blog'
   /**
    * Handle change
@@ -34,13 +39,22 @@ const BlogForm = ({ handleAddBlog }) => {
   }
 
   /**
-   * Handle the addition of a new blog or the update of an old blog
+   * Handle the addition of a new blog
    * @param {*} event
    */
   const handleSubmit = async (event) => {
     event.preventDefault()
-    await handleAddBlog(blogData)
-    setBlogData({ ...defaultBlogData })
+    try {
+      console.log('handleAddBlog', blogData)
+      await createBlog.mutateAsync(blogData)
+      blogFormVisibilityDispatch({ type: 'BLOG_FORM_VISIBILITY' })
+      addNotification(
+        `a new blog ${blogData.title} by ${blogData.author} added`,
+        notificationStyle.info
+      )
+    } catch (error) {
+      addNotification(parseErrorMsg(error), notificationStyle.error)
+    }
   }
 
   return (
@@ -96,10 +110,6 @@ const BlogForm = ({ handleAddBlog }) => {
       </form>
     </div>
   )
-}
-
-BlogForm.propTypes = {
-  handleAddBlog: PropTypes.func.isRequired
 }
 
 export default BlogForm
