@@ -93,6 +93,7 @@ router.post('/:id/comments', async (request, response) => {
   if (!blog) {
     return response.status(404).json({ message: 'Blog not found' })
   }
+  console.log('add comment', request.body)
   blog.comments.push(request.body)
   await blog.save()
   const updatedBlog = await getBlog(request.params.id)

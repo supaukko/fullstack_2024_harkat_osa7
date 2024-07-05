@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import blogService from '../services/blogs'
-import { uniqueId } from '../utils'
 
 const KEY = 'blogs'
 
@@ -79,7 +78,7 @@ const useAddComment = () => {
       await blogService.addComment(id, comment),
     onSuccess: (updatedBlog) => {
       const previousBlogs = queryClient.getQueryData({ queryKey: [KEY] })
-      console.log('useAddComment', updatedBlog, previousBlogs)
+      // console.log('useAddComment', updatedBlog, previousBlogs)
       if (previousBlogs) {
         queryClient.setQueryData(KEY, (previousBlogs) =>
           previousBlogs.map((item) =>
