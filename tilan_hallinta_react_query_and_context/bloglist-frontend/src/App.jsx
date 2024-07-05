@@ -35,6 +35,11 @@ const App = () => {
     }
   }
 
+  const handleLogout = async () => {
+    logoutUser()
+    navigate('/', { replace: true })
+  }
+
   /**
    * Handle delete
    * @param {*} id
@@ -75,7 +80,7 @@ const App = () => {
 
   return (
     <div>
-      <Menu user={user} handleLogout={logoutUser} />
+      <Menu user={user} handleLogout={handleLogout} />
       <Notification />
       <h2>Blog app</h2>
       <Routes>
