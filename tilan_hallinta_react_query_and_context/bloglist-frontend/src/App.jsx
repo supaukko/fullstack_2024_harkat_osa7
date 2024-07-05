@@ -9,7 +9,7 @@ import Menu from './components/Menu'
 import { useFilterValue } from './contexts/FilterContext'
 import { useBlogs } from './hooks/useBlogs'
 import { useUserValue, useLogoutUser } from './contexts/UserContext'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { useUpdateBlog, useRemoveBlog } from './hooks/useBlogs'
 import { notificationStyle, parseErrorMsg } from './utils'
 
@@ -21,6 +21,7 @@ const App = () => {
   const addNotification = useAddNotification()
   const updateBlog = useUpdateBlog()
   const removeBlog = useRemoveBlog()
+  const navigate = useNavigate()
 
   console.log('App', user)
 
@@ -51,6 +52,7 @@ const App = () => {
           `The blog '${deleteBlog.title}' has been removed`,
           notificationStyle.info
         )
+        navigate('/', { replace: true })
       } catch (error) {
         addNotification(parseErrorMsg(error), notificationStyle.error)
       }

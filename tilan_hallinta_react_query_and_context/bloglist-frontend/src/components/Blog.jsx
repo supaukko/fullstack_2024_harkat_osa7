@@ -3,11 +3,10 @@ import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blogs, user, handleDeleteBlog, handleUpdateBlog }) => {
-  const [isVisible, setIsVisible] = useState(false)
   const id = useParams().id
   const blog = blogs?.find((item) => item.id === id)
 
-  //console.log(`Blog user=${user?.username}`, blog)
+  // console.log(`*** Blog user=${user?.username}`, blog)
 
   const handleIncreaseLikes = () => {
     const updatedBlog = { ...blog, ['votes']: blog.votes + 1 }
@@ -15,9 +14,8 @@ const Blog = ({ blogs, user, handleDeleteBlog, handleUpdateBlog }) => {
     handleUpdateBlog(updatedBlog)
   }
 
-  const toggleVisible = (event) => {
-    event.preventDefault()
-    setIsVisible(!isVisible)
+  if (blog === undefined) {
+    return null
   }
 
   const isRemoveEnabled = blog?.user?.username !== user?.username
@@ -29,38 +27,29 @@ const Blog = ({ blogs, user, handleDeleteBlog, handleUpdateBlog }) => {
           <p className="paragraph">
             {blog.title} -- {blog.author}
           </p>
+        </div>
+        <div className={'row'}>
+          <p className="paragraph">url: {blog.url}</p>
+        </div>
+        <div className={'row'}>
+          <p className="paragraph" data-testid="blog_votes">
+            likes: {blog.votes}
+          </p>
           <div>
-            <button className={'toggle-button'} onClick={toggleVisible}>
-              {isVisible ? 'hide' : 'view'}
-            </button>
+            <button onClick={handleIncreaseLikes}>like</button>
           </div>
         </div>
-        {isVisible && (
-          <>
-            <div className={'row'}>
-              <p className="paragraph">url: {blog.url}</p>
-            </div>
-            <div className={'row'}>
-              <p className="paragraph" data-testid="blog_votes">
-                likes: {blog.votes}
-              </p>
-              <div>
-                <button onClick={handleIncreaseLikes}>like</button>
-              </div>
-            </div>
-            <div className={'row'}>
-              <p className="paragraph">user: {blog.user?.name}</p>
-            </div>
-            {!isRemoveEnabled && (
-              <button
-                className={'blue-button'}
-                onClick={() => handleDeleteBlog(blog)}
-                disabled={isRemoveEnabled}
-              >
-                remove
-              </button>
-            )}
-          </>
+        <div className={'row'}>
+          <p className="paragraph">user: {blog.user?.name}</p>
+        </div>
+        {!isRemoveEnabled && (
+          <button
+            className={'blue-button'}
+            onClick={() => handleDeleteBlog(blog)}
+            disabled={isRemoveEnabled}
+          >
+            remove
+          </button>
         )}
       </li>
     </ul>
