@@ -1,7 +1,7 @@
-import BlogForm from './components/BlogForm'
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import { useAddNotification } from './contexts/NotificationContext'
 import Login from './components/Login'
 import UserList from './components/UserList'
 import User from './components/User'
@@ -10,14 +10,52 @@ import { useFilterValue } from './contexts/FilterContext'
 import { useBlogs } from './hooks/useBlogs'
 import { useUserValue, useLogoutUser } from './contexts/UserContext'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { useUpdateBlog, useRemoveBlog } from './hooks/useBlogs'
+import { notificationStyle, parseErrorMsg } from './utils'
 
 const App = () => {
   const { user } = useUserValue()
   const logoutUser = useLogoutUser()
   const { filter } = useFilterValue()
   const { isPending, isError, data: blogs, error } = useBlogs()
+  const addNotification = useAddNotification()
+  const updateBlog = useUpdateBlog()
+  const removeBlog = useRemoveBlog()
 
   console.log('App', user)
+
+  const handleUpdateBlog = async (updatedBlog) => {
+    // console.log('** handleUpdateBlog', updatedBlog)
+    try {
+      await updateBlog.mutateAsync({ id: updatedBlog.id, data: updatedBlog })
+      addNotification(`Updated ${updatedBlog.author}`, notificationStyle.info)
+    } catch (error) {
+      addNotification(parseErrorMsg(error), notificationStyle.error)
+    }
+  }
+
+  /**
+   * Handle delete
+   * @param {*} id
+   */
+  const handleDeleteBlog = async (deleteBlog) => {
+    console.log('handleDeleteBlog', deleteBlog)
+    if (
+      window.confirm(
+        `Remove blog '${deleteBlog.title}' by ${deleteBlog.author}?`
+      )
+    ) {
+      try {
+        await removeBlog.mutateAsync(deleteBlog.id)
+        addNotification(
+          `The blog '${deleteBlog.title}' has been removed`,
+          notificationStyle.info
+        )
+      } catch (error) {
+        addNotification(parseErrorMsg(error), notificationStyle.error)
+      }
+    }
+  }
 
   const filteredBlogs = blogs
     ?.filter((blog) =>
@@ -45,6 +83,17 @@ const App = () => {
           element={user ? <UserList /> : <Navigate replace to="/login" />}
         />
         <Route path="/users/:id" element={<User />} />
+        <Route
+          path="/blogs/:id"
+          element={
+            <Blog
+              blogs={filteredBlogs}
+              user={user}
+              handleDeleteBlog={handleDeleteBlog}
+              handleUpdateBlog={handleUpdateBlog}
+            />
+          }
+        />
       </Routes>
     </div>
   )

@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, user, handleDeleteBlog, handleUpdateBlog }) => {
+const Blog = ({ blogs, user, handleDeleteBlog, handleUpdateBlog }) => {
   const [isVisible, setIsVisible] = useState(false)
   const id = useParams().id
+  const blog = blogs?.find((item) => item.id === id)
 
   //console.log(`Blog user=${user?.username}`, blog)
 
@@ -22,50 +23,52 @@ const Blog = ({ blog, user, handleDeleteBlog, handleUpdateBlog }) => {
   const isRemoveEnabled = blog?.user?.username !== user?.username
 
   return (
-    <li className={'blog'}>
-      <div className={'row'}>
-        <p className="paragraph">
-          {blog.title} -- {blog.author}
-        </p>
-        <div>
-          <button className={'toggle-button'} onClick={toggleVisible}>
-            {isVisible ? 'hide' : 'view'}
-          </button>
-        </div>
-      </div>
-      {isVisible && (
-        <>
-          <div className={'row'}>
-            <p className="paragraph">url: {blog.url}</p>
-          </div>
-          <div className={'row'}>
-            <p className="paragraph" data-testid="blog_votes">
-              likes: {blog.votes}
-            </p>
-            <div>
-              <button onClick={handleIncreaseLikes}>like</button>
-            </div>
-          </div>
-          <div className={'row'}>
-            <p className="paragraph">user: {blog.user?.name}</p>
-          </div>
-          {!isRemoveEnabled && (
-            <button
-              className={'blue-button'}
-              onClick={() => handleDeleteBlog(blog)}
-              disabled={isRemoveEnabled}
-            >
-              remove
+    <ul className={'list-no-style'}>
+      <li className={'blog'}>
+        <div className={'row'}>
+          <p className="paragraph">
+            {blog.title} -- {blog.author}
+          </p>
+          <div>
+            <button className={'toggle-button'} onClick={toggleVisible}>
+              {isVisible ? 'hide' : 'view'}
             </button>
-          )}
-        </>
-      )}
-    </li>
+          </div>
+        </div>
+        {isVisible && (
+          <>
+            <div className={'row'}>
+              <p className="paragraph">url: {blog.url}</p>
+            </div>
+            <div className={'row'}>
+              <p className="paragraph" data-testid="blog_votes">
+                likes: {blog.votes}
+              </p>
+              <div>
+                <button onClick={handleIncreaseLikes}>like</button>
+              </div>
+            </div>
+            <div className={'row'}>
+              <p className="paragraph">user: {blog.user?.name}</p>
+            </div>
+            {!isRemoveEnabled && (
+              <button
+                className={'blue-button'}
+                onClick={() => handleDeleteBlog(blog)}
+                disabled={isRemoveEnabled}
+              >
+                remove
+              </button>
+            )}
+          </>
+        )}
+      </li>
+    </ul>
   )
 }
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
+  blogs: PropTypes.array.isRequired,
   user: PropTypes.object,
   handleDeleteBlog: PropTypes.func,
   handleUpdateBlog: PropTypes.func
