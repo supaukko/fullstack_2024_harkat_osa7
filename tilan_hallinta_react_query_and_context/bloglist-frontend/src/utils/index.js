@@ -21,4 +21,8 @@ export const uniqueId = () => {
   return `${hexa}-${nbr}`
 }
 
+export const isBlank = (str) => {
+  return str === null || str === undefined || str === ''
+}
+
 export const USER_STORAGE_KEY = 'loggedBloglistUser"'
