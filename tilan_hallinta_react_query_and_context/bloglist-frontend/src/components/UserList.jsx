@@ -1,5 +1,5 @@
-import UserListItem from './UserListItem'
 import { useUsers } from '../hooks/useUsers'
+import { Link } from 'react-router-dom'
 
 const UserList = () => {
   const { isPending, isError, data: users, error } = useUsers()
@@ -16,7 +16,7 @@ const UserList = () => {
     return null
   }
 
-  console.log('*** UserList', users)
+  // console.log('*** UserList', users)
 
   return (
     <div>
@@ -33,7 +33,10 @@ const UserList = () => {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <UserListItem user={user} />
+              <td>
+                <Link to={user.id}>{user.name}</Link>
+              </td>
+              <td>{user.blogs ? user.blogs.length : 0}</td>
             </tr>
           ))}
         </tbody>

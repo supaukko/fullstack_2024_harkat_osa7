@@ -4,7 +4,7 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Login from './components/Login'
 import UserList from './components/UserList'
-import UserListItem from './components/UserListItem'
+import User from './components/User'
 import Menu from './components/Menu'
 import { useFilterValue } from './contexts/FilterContext'
 import { useBlogs } from './hooks/useBlogs'
@@ -39,15 +39,12 @@ const App = () => {
       <Notification />
       <Routes>
         <Route path="login" element={<Login />} />
-        <Route path="/" element={<Blogs blogs={filteredBlogs} />}>
-          <Route path=":blogId" element={<Blog />} />
-        </Route>
+        <Route path="/" element={<Blogs blogs={filteredBlogs} />} />
         <Route
           path="users"
           element={user ? <UserList /> : <Navigate replace to="/login" />}
-        >
-          <Route path=":userId" element={<UserListItem />} />
-        </Route>
+        />
+        <Route path="/users/:id" element={<User />} />
       </Routes>
     </div>
   )
