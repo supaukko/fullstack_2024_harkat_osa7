@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import blogService from '../services/blogs'
+import { uniqueId } from '../utils'
 
 const KEY = 'blogs'
 
@@ -71,6 +72,30 @@ const useCreateBlog = () => {
   })
 }
 
+const useAddComment = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, comment }) =>
+      await blogService.addComment(id, comment),
+    onSuccess: (updatedBlog) => {
+      const previousBlogs = queryClient.getQueryData({ queryKey: [KEY] })
+      console.log('useAddComment', updatedBlog, previousBlogs)
+      if (previousBlogs) {
+        queryClient.setQueryData(KEY, (previousBlogs) =>
+          previousBlogs.map((item) =>
+            item.id === updatedBlog.id ? { ...item, ...updatedBlog } : item
+          )
+        )
+      } else {
+        queryClient.invalidateQueries({ queryKey: [KEY] })
+      }
+    },
+    onError: (error) => {
+      console.error('Create error:', error.response.data.error)
+    }
+  })
+}
+
 const useRemoveBlog = () => {
   const queryClient = useQueryClient()
   return useMutation({
@@ -87,5 +112,6 @@ export {
   useBlogs,
   useUpdateBlog,
   useCreateBlog,
-  useRemoveBlog
+  useRemoveBlog,
+  useAddComment
 }

@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkhlbW1vIiwiaWQiOiI2Njg4NjZlNjBkMmQwNjUwMDdiMThiN2IiLCJpYXQiOjE3MjAyMTU5NjQsImV4cCI6MTcyMDIxOTU2NH0.hmm-45RJutXjvUtf4etITjs6INuZmdeHY_aS4CCQj64
 
 {
-  "author": "Author",
-  "title": "Title",
+  "author": "Donald",
+  "title": "Fake news",
   "url": "https://foo.bar.fi",
   "votes": 1
 }

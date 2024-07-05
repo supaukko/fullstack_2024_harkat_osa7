@@ -1,5 +1,9 @@
 const mongoose = require('mongoose')
 
+const isValidString = (value) => {
+  return value !== null && value !== undefined && value !== ''
+}
+
 /**
  * Blogin skeema, riippuvuus useriin
  * Mongoosen populate-funktion toiminnallisuus perustuu siihen, että
@@ -15,9 +19,7 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: function (value) {
-        return value !== null || value.trim() !== ''
-      },
+      validator: isValidString,
       message: 'Invalid title'
     }
   },
@@ -25,9 +27,7 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: function (value) {
-        return value !== null || value.trim() !== ''
-      },
+      validator: isValidString,
       message: 'Invalid URL'
     }
   },
@@ -38,6 +38,10 @@ const blogSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+  comments: {
+    type: [Object],
+    default: []
   }
 })
 

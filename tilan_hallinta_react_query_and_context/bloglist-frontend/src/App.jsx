@@ -77,6 +77,7 @@ const App = () => {
     <div>
       <Menu user={user} handleLogout={logoutUser} />
       <Notification />
+      <h2>Blog app</h2>
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="/" element={<Blogs blogs={filteredBlogs} />} />

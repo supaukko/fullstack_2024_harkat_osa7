@@ -88,6 +88,17 @@ router.post(
   }
 )
 
+router.post('/:id/comments', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (!blog) {
+    return response.status(404).json({ message: 'Blog not found' })
+  }
+  blog.comments.push(request.body)
+  await blog.save()
+  const updatedBlog = await getBlog(request.params.id)
+  response.status(200).json(updatedBlog)
+})
+
 router.delete(
   '/:id',
   tokenExtractor,
@@ -115,7 +126,6 @@ router.delete(
         .status(403)
         .json({ message: 'No authorization to delete the blog' })
     }
-
     await blog.deleteOne()
     response.status(204).end()
     //} catch(error) { next(error) }

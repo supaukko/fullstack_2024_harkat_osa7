@@ -15,4 +15,10 @@ export const parseErrorMsg = (error) => {
     : error.message
 }
 
+export const uniqueId = () => {
+  const hexa = Date.now().toString(16)
+  const nbr = Math.random().toString(16).slice(2)
+  return `${hexa}-${nbr}`
+}
+
 export const USER_STORAGE_KEY = 'loggedBloglistUser"'

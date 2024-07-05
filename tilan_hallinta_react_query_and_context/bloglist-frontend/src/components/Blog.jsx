@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import Comments from './Comments'
 
 const Blog = ({ blogs, user, handleDeleteBlog, handleUpdateBlog }) => {
   const id = useParams().id
@@ -18,41 +19,48 @@ const Blog = ({ blogs, user, handleDeleteBlog, handleUpdateBlog }) => {
     return null
   }
 
-  const isRemoveEnabled = blog?.user?.username !== user?.username
+  const isRemoveEnabled = blog?.user?.username === user?.username
 
   return (
-    <ul className={'list-no-style'}>
-      <li className={'blog'}>
-        <div className={'row'}>
-          <p className="paragraph">
-            {blog.title} -- {blog.author}
-          </p>
-        </div>
-        <div className={'row'}>
-          <p className="paragraph">url: {blog.url}</p>
-        </div>
-        <div className={'row'}>
-          <p className="paragraph" data-testid="blog_votes">
-            likes: {blog.votes}
-          </p>
-          <div>
-            <button onClick={handleIncreaseLikes}>like</button>
+    <div>
+      <h3>
+        {blog.title} -- {blog.author}
+      </h3>
+      <ul className={'list-no-style'}>
+        <li>
+          <div className={'row'}>
+            <a href={blog.url} target="_blank" rel="noopener noreferrer">
+              {blog.url}
+            </a>
           </div>
-        </div>
-        <div className={'row'}>
-          <p className="paragraph">user: {blog.user?.name}</p>
-        </div>
-        {!isRemoveEnabled && (
-          <button
-            className={'blue-button'}
-            onClick={() => handleDeleteBlog(blog)}
-            disabled={isRemoveEnabled}
-          >
-            remove
-          </button>
-        )}
-      </li>
-    </ul>
+        </li>
+        <li>
+          <div className={'row'}>
+            <p className="paragraph" data-testid="blog_votes">
+              {blog.votes} likes
+            </p>
+            <div>
+              <button onClick={handleIncreaseLikes}>like</button>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div className={'row'}>
+            <p className="paragraph">added by {blog.user?.name}</p>
+          </div>
+          {isRemoveEnabled && (
+            <button
+              className={'blue-button'}
+              onClick={() => handleDeleteBlog(blog)}
+              disabled={!isRemoveEnabled}
+            >
+              remove
+            </button>
+          )}
+        </li>
+      </ul>
+      <Comments blog={blog} />
+    </div>
   )
 }
 

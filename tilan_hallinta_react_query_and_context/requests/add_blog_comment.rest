@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs/668869f1b1d4f87f52592761/comments
+Content-Type: application/json
+
+{
+  "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi euismod ac nisi quis cursus",
+  "index": "19084c4b347-04d698d239876"
+}
+
+
