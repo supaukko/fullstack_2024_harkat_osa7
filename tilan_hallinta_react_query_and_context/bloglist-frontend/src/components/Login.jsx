@@ -1,13 +1,21 @@
-import { useState } from 'react'
-import PropTypes from 'prop-types'
-import { useLoginUser } from '../contexts/UserContext'
+import { useLoginUser, useUserValue } from '../contexts/UserContext'
+import { useLocation, useNavigate, Navigate } from 'react-router-dom'
 
 function Login() {
   const loginUser = useLoginUser()
+  const { user } = useUserValue()
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     loginUser(event.target.username.value, event.target.password.value)
+    navigate('/', { replace: true })
+  }
+
+  if (user) {
+    console.log('** Login', user)
+    return <Navigate to="/" state={{ from: location }} replace />
   }
 
   return (

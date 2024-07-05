@@ -1,21 +1,19 @@
 import BlogForm from './components/BlogForm'
 import Blogs from './components/Blogs'
-import Filter from './components/Filter'
+import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Login from './components/Login'
-import LoggedInUser from './components/LoggedInUser'
-import Togglable from './components/Togglable'
 import UserList from './components/UserList'
-import { useAddNotification } from './contexts/NotificationContext'
+import UserListItem from './components/UserListItem'
+import Menu from './components/Menu'
 import { useFilterValue } from './contexts/FilterContext'
 import { useBlogs } from './hooks/useBlogs'
 import { useUserValue, useLogoutUser } from './contexts/UserContext'
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 
 const App = () => {
   const { user } = useUserValue()
   const logoutUser = useLogoutUser()
-  const addNotification = useAddNotification()
   const { filter } = useFilterValue()
   const { isPending, isError, data: blogs, error } = useBlogs()
 
@@ -37,21 +35,20 @@ const App = () => {
 
   return (
     <div>
+      <Menu user={user} handleLogout={logoutUser} />
       <Notification />
-      <h2>blogs</h2>
-      <LoggedInUser user={user} handleLogout={logoutUser} />
-      {!user && <Login />}
-      <div>
-        {user && (
-          <Togglable buttonLabel="new blog">
-            <BlogForm />
-          </Togglable>
-        )}
-        <h2>Blogit</h2>
-        <Filter />
-        <Blogs blogs={filteredBlogs} user={user} />
-        <UserList />
-      </div>
+      <Routes>
+        <Route path="login" element={<Login />} />
+        <Route path="/" element={<Blogs blogs={filteredBlogs} />}>
+          <Route path=":blogId" element={<Blog />} />
+        </Route>
+        <Route
+          path="users"
+          element={user ? <UserList /> : <Navigate replace to="/login" />}
+        >
+          <Route path=":userId" element={<UserListItem />} />
+        </Route>
+      </Routes>
     </div>
   )
 }

@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, user, handleDeleteBlog, handleUpdateBlog }) => {
   const [isVisible, setIsVisible] = useState(false)
+  const id = useParams().id
 
   //console.log(`Blog user=${user?.username}`, blog)
 

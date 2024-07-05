@@ -1,6 +1,8 @@
+import { useParams } from 'react-router-dom'
+
 function UserListItem({ user }) {
   console.log('UserListItem', user)
-
+  const { userId } = useParams()
   if (user === undefined) {
     return null
   }

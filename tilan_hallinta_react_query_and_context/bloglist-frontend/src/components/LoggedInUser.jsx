@@ -1,11 +1,25 @@
+import { Link } from 'react-router-dom'
+
 function LoggedInUser({ user, handleLogout }) {
   return (
-    <div className="row">
-      <p className="paragraph">{user?.name} logged in</p>
-      <div>
-        <button onClick={() => handleLogout()}>Logout</button>
-      </div>
-    </div>
+    <>
+      {user ? (
+        <>
+          <li>
+            <div>{user?.name} logged in</div>
+          </li>
+          <li>
+            <div>
+              <button onClick={handleLogout}>logout</button>
+            </div>
+          </li>
+        </>
+      ) : (
+        <li>
+          <Link to="/login">login</Link>
+        </li>
+      )}
+    </>
   )
 }
 

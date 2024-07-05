@@ -86,3 +86,28 @@ tr:hover,
   padding: 0;
   margin: 0;
 }
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  background-color: #d7d2d2;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a, nav ul li div {
+  display: block;
+  color: rgb(165, 16, 86);
+  text-align: center;
+  padding: 10px 10px;
+  text-decoration: none;
+}
+
+nav ul li a:hover {
+  background-color: #cec8c8;
+}
+
