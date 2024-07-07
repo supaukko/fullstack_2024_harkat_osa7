@@ -485,4 +485,4 @@ Menu-, Blogs-, BlogForm-, Comments-, CommentForm- ja Notification-komponenttien 
 npm install @mui/material @emotion/react @emotion/styled
 ```
 
-UserList-komponentin tyyli toteutetaan UI Materialilla
+UserList- ja Login-komponenttien tyylit toteutetaan UI Materialilla
