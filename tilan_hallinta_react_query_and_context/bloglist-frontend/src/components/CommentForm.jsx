@@ -2,6 +2,7 @@ import { useAddComment } from '../hooks/useBlogs'
 import { uniqueId } from '../utils'
 import { useAddNotification } from '../contexts/NotificationContext'
 import { notificationStyle, parseErrorMsg, isBlank } from '../utils'
+import { Form, Button, Row, Col } from 'react-bootstrap'
 
 import PropTypes from 'prop-types'
 
@@ -31,10 +32,22 @@ const CommentForm = ({ blog }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" name="comment" placeholder="..." />
-      <button type="submit">add comment</button>
-    </form>
+    <Form onSubmit={handleSubmit}>
+      <Form.Group controlId="comment">
+        <Form.Label>comment</Form.Label>
+        <Form.Control
+          type="text"
+          data-testid="comment"
+          name="comment"
+          placeholder="Enter comment"
+        />
+      </Form.Group>
+      <Form.Group>
+        <Button type="submit" variant="primary">
+          add comment
+        </Button>
+      </Form.Group>
+    </Form>
   )
 }
 

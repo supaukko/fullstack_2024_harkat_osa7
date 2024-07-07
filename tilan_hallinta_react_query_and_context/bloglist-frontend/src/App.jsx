@@ -6,6 +6,9 @@ import Login from './components/Login'
 import UserList from './components/UserList'
 import User from './components/User'
 import Menu from './components/Menu'
+import NotFound from './components/NotFound'
+import BlogForm from './components/BlogForm'
+
 import { useFilterValue } from './contexts/FilterContext'
 import { useBlogs } from './hooks/useBlogs'
 import { useUserValue, useLogoutUser } from './contexts/UserContext'
@@ -82,7 +85,6 @@ const App = () => {
     <div>
       <Menu user={user} handleLogout={handleLogout} />
       <Notification />
-      <h2>Blog app</h2>
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="/" element={<Blogs blogs={filteredBlogs} />} />
@@ -91,6 +93,7 @@ const App = () => {
           element={user ? <UserList /> : <Navigate replace to="/login" />}
         />
         <Route path="/users/:id" element={<User />} />
+        <Route path="/blogs/new-blog" element={<BlogForm />} />
         <Route
           path="/blogs/:id"
           element={
@@ -102,6 +105,7 @@ const App = () => {
             />
           }
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   )

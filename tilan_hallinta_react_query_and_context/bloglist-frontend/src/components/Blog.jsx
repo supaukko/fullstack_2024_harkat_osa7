@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Card, Button, Row, Col } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Comments from './Comments'
@@ -23,42 +23,38 @@ const Blog = ({ blogs, user, handleDeleteBlog, handleUpdateBlog }) => {
 
   return (
     <div>
-      <h3>
-        {blog.title} -- {blog.author}
-      </h3>
-      <ul className={'list-no-style'}>
-        <li>
-          <div className={'row'}>
+      <Card>
+        <Card.Body>
+          <Card.Title>{blog.title}</Card.Title>
+          <Card.Text>
+            <strong>author:</strong> {blog.author} <br />
+            <strong>url:</strong>
             <a href={blog.url} target="_blank" rel="noopener noreferrer">
               {blog.url}
             </a>
-          </div>
-        </li>
-        <li>
-          <div className={'row'}>
-            <p className="paragraph" data-testid="blog_votes">
-              {blog.votes} likes
-            </p>
-            <div>
-              <button onClick={handleIncreaseLikes}>like</button>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div className={'row'}>
-            <p className="paragraph">added by {blog.user?.name}</p>
-          </div>
-          {isRemoveEnabled && (
-            <button
-              className={'blue-button'}
-              onClick={() => handleDeleteBlog(blog)}
-              disabled={!isRemoveEnabled}
-            >
-              remove
-            </button>
-          )}
-        </li>
-      </ul>
+            <br />
+            <strong>vote:</strong> {blog.votes}
+          </Card.Text>
+          <Row className="justify-content-left">
+            <Col xs="auto">
+              <Button variant="primary" onClick={handleIncreaseLikes}>
+                like
+              </Button>
+            </Col>
+            {isRemoveEnabled && (
+              <Col xs="auto">
+                <Button
+                  variant="danger"
+                  onClick={() => handleDeleteBlog(blog)}
+                  disabled={!isRemoveEnabled}
+                >
+                  remove
+                </Button>
+              </Col>
+            )}
+          </Row>
+        </Card.Body>
+      </Card>
       <Comments blog={blog} />
     </div>
   )

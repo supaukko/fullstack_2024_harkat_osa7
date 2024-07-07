@@ -253,19 +253,17 @@ Tehdään `.prettierignore` tiedosto ja lisätään sinne mm. bloglist-frontend 
 Tehdään `.prettierrc` tiedosto.
 Tehdään `.prettierignore` tiedosto ja lisätään sinne mm. bloglist-frontend hakemisto
 
-
 ## Tilan hallinta: React Query ja context
 
 https://fullstackopen.com/osa6/react_query_use_reducer_ja_context
 
-
 ### React Query
 
- [React Query (/ Tanstack)](https://tanstack.com/query/latest) ‑kirjasto avulla voidaan säilyttää ja hallinnoida palvelimelta haettua dataa
+[React Query (/ Tanstack)](https://tanstack.com/query/latest) ‑kirjasto avulla voidaan säilyttää ja hallinnoida palvelimelta haettua dataa
 
- ```
- npm install @tanstack/react-query
- ```
+```
+npm install @tanstack/react-query
+```
 
 Kirjaston käyttö edellyttää providerin käyttöä esim. main.js tiedostossa:
 
@@ -283,6 +281,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 ```
 
 Datan hakeminen palvelimelta ja talletus palvelimelle tapahtuu seuraavasti:
+
 ```
   import { useQuery, useMutation, useQueryClient } from 'react-query'
 
@@ -297,7 +296,7 @@ Datan hakeminen palvelimelta ja talletus palvelimelle tapahtuu seuraavasti:
   const updateNote = updatedNote =>
     axios.put(`${baseUrl}/${updatedNote.id}`, updatedNote).then(res => res.data)
 
-  // Query clientin avulla voidaan puskuroitu data invalidoida, jolloin päivittynyt 
+  // Query clientin avulla voidaan puskuroitu data invalidoida, jolloin päivittynyt
   // data voidaan renderöidä
   const queryClient = useQueryClient()
 
@@ -431,15 +430,51 @@ const App = () => {
 
 #### 7.14: käyttäjien näkymä
 
- React Router -kirjaston avulla voidaan hallita React-sovelluksen navigaatio
- 
- ```
+React Router -kirjaston avulla voidaan hallita React-sovelluksen navigaatio
+
+```
 npm install react-router-dom
- 
+
 
 import {
-  BrowserRouter as Router,
-  Routes, Route, Link
+ BrowserRouter as Router,
+ Routes, Route, Link
 } from 'react-router-dom'
 
- ```
+```
+
+## Tyylit
+
+### Rect Bootstrap
+
+```
+npm install react-bootstrap
+```
+
+[Bootstrap CSS](https://react-bootstrap.netlify.app/docs/getting-started/introduction/) ladataan
+lisäämällä index.html tiedoston head-elementtiin:
+
+```
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+  crossorigin="anonymous"
+/>
+```
+
+Bootstrapissa koko sivun sisältö renderöidään yleensä container:ina, eli käytännössä koko sovelluksen ympäröivä div-elementti merkitään luokalla container:
+
+```
+const App = () => {
+  // ...
+
+  return (
+    <div className="container">
+      // ...
+    </div>
+  )
+}
+```
+
+Menu- ja Notification-komponenttien tyyli toteutetaan react-bootstrapillä

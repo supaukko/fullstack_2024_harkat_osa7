@@ -1,7 +1,5 @@
-import Blog from './Blog'
 import Filter from './Filter'
-import Togglable from './Togglable'
-import BlogForm from './BlogForm'
+import { ListGroup } from 'react-bootstrap'
 import { useUserValue } from '../contexts/UserContext'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -13,20 +11,20 @@ const Blogs = ({ blogs }) => {
     <div>
       <h2>Blogit</h2>
       {user && (
-        <Togglable buttonLabel="new blog">
-          <BlogForm />
-        </Togglable>
+        <Link to="/blogs/new-blog">
+          <button>create new blog</button>
+        </Link>
       )}
       <Filter />
-      <ul className={'list-no-style'}>
+      <ListGroup>
         {blogs.map((blog) => (
-          <li className={'blog'} key={blog.id}>
+          <ListGroup.Item key={blog.id}>
             <Link className={'row'} to={`/blogs/${blog.id}`}>
-              {blog.title}
+              {blog.title} -- {blog.author}
             </Link>
-          </li>
+          </ListGroup.Item>
         ))}
-      </ul>
+      </ListGroup>
     </div>
   )
 }

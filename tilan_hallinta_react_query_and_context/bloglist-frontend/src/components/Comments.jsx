@@ -1,16 +1,17 @@
 import CommentForm from './CommentForm'
 import PropTypes from 'prop-types'
+import { ListGroup } from 'react-bootstrap'
 
 const Comments = ({ blog }) => {
   return (
     <div>
       <h2>Comments</h2>
       <CommentForm blog={blog} />
-      <ul>
+      <ListGroup>
         {blog.comments.map((comment) => (
-          <li key={comment.index}>{comment.comment}</li>
+          <ListGroup.Item key={comment.index}>{comment.comment}</ListGroup.Item>
         ))}
-      </ul>
+      </ListGroup>
     </div>
   )
 }

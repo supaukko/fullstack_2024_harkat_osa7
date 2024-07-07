@@ -1,23 +1,19 @@
 import { Link } from 'react-router-dom'
-
+import { Navbar, Nav, Button } from 'react-bootstrap'
 function LoggedInUser({ user, handleLogout }) {
   return (
     <>
       {user ? (
         <>
-          <li>
-            <div>{user?.name} logged in</div>
-          </li>
-          <li>
-            <div>
-              <button onClick={handleLogout}>logout</button>
-            </div>
-          </li>
+          <Nav.Item className="nav-link">{user?.name} logged in</Nav.Item>
+          <Button variant="outline-danger" onClick={handleLogout}>
+            logout
+          </Button>
         </>
       ) : (
-        <li>
-          <Link to="/login">login</Link>
-        </li>
+        <Nav.Link as={Link} to="/login">
+          login
+        </Nav.Link>
       )}
     </>
   )

@@ -3,6 +3,8 @@ import { useAddNotification } from '../contexts/NotificationContext'
 import { useVisibilityDispatch } from '../contexts/VisibilityContext'
 import { useCreateBlog } from '../hooks/useBlogs'
 import { notificationStyle, parseErrorMsg } from '../utils'
+import { Form, Button, Row, Col } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 
 const defaultBlogData = {
   author: '',
@@ -17,6 +19,7 @@ const BlogForm = () => {
   const addNotification = useAddNotification()
   const [blogData, setBlogData] = useState({ ...defaultBlogData })
   const blogFormVisibilityDispatch = useVisibilityDispatch()
+  const navigate = useNavigate()
   const header = 'Add a new blog'
   /**
    * Handle change
@@ -52,62 +55,93 @@ const BlogForm = () => {
         `a new blog ${blogData.title} by ${blogData.author} added`,
         notificationStyle.info
       )
+      navigate('/', { replace: true })
     } catch (error) {
       addNotification(parseErrorMsg(error), notificationStyle.error)
     }
   }
 
+  /**
+   * Handle the addition of a new blog
+   * @param {*} event
+   */
+  const handleCancel = (event) => {
+    navigate('/', { replace: true })
+  }
+
   return (
     <div>
       <h3>{header}</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="author">author:</label>
-          <input
-            data-testid="author"
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="author">
+          <Form.Label>author</Form.Label>
+          <Form.Control
             type="text"
-            id="author"
+            data-testid="author"
             name="author"
+            placeholder="Enter author"
             value={blogData.author}
             onChange={handleChange}
           />
-        </div>
-        <div>
-          <label htmlFor="title">title:</label>
-          <input
-            data-testid="title"
-            type="text"
-            id="title"
+        </Form.Group>
+        <Form.Group controlId="title">
+          <Form.Label>title</Form.Label>
+          <Form.Control
+            as="textarea"
             name="title"
+            data-testid="title"
+            rows={5}
+            placeholder="Enter title"
             value={blogData.title}
             onChange={handleChange}
           />
-        </div>
-        <div>
-          <label htmlFor="url">url:</label>
-          <input
-            data-testid="url"
+        </Form.Group>
+        <Form.Group controlId="url">
+          <Form.Label>url</Form.Label>
+          <Form.Control
             type="text"
-            id="url"
+            data-testid="url"
             name="url"
+            placeholder="Enter url"
             value={blogData.url}
             onChange={handleChange}
           />
-        </div>
-        <div>
-          <label htmlFor="votes">likes:</label>
-          <input
-            data-testid="votes"
+        </Form.Group>
+        <Form.Group controlId="votes">
+          <Form.Label>votes</Form.Label>
+          <Form.Control
             type="text"
-            id="votes"
+            data-testid="votes"
             name="votes"
+            placeholder="Enter votes"
             value={blogData.votes}
             onChange={handleChange}
           />
-        </div>
-        <button onClick={(event) => handleClear(event)}>clear form</button>
-        <button type="submit">create</button>
-      </form>
+        </Form.Group>
+        <Form.Group as={Row}>
+          <Col>
+            <Button
+              type="button"
+              variant="warning"
+              className="ml-2"
+              onClick={handleClear}
+            >
+              clear form
+            </Button>
+            <Button type="submit" variant="primary">
+              create
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="ml-2"
+              onClick={handleCancel}
+            >
+              cancel
+            </Button>
+          </Col>
+        </Form.Group>
+      </Form>
     </div>
   )
 }
