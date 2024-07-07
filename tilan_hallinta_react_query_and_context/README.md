@@ -486,3 +486,14 @@ npm install @mui/material @emotion/react @emotion/styled
 ```
 
 UserList- ja Login-komponenttien tyylit toteutetaan UI Materialilla
+
+### Styled components
+
+https://fullstackopen.com/osa7/lisaa_tyyleista#styled-components
+https://styled-components.com/
+
+```
+npm install styled-components
+```
+
+User-komponentin tyyli toteutetaan styled-componentilla
