@@ -477,4 +477,12 @@ const App = () => {
 }
 ```
 
-Menu- ja Notification-komponenttien tyyli toteutetaan react-bootstrapillä
+Menu-, Blogs-, BlogForm-, Comments-, CommentForm- ja Notification-komponenttien tyyli toteutetaan react-bootstrapillä
+
+### Material UI
+
+```
+npm install @mui/material @emotion/react @emotion/styled
+```
+
+UserList-komponentin tyyli toteutetaan UI Materialilla

@@ -32,22 +32,28 @@ const CommentForm = ({ blog }) => {
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="comment">
-        <Form.Label>comment</Form.Label>
-        <Form.Control
-          type="text"
-          data-testid="comment"
-          name="comment"
-          placeholder="Enter comment"
-        />
-      </Form.Group>
-      <Form.Group>
-        <Button type="submit" variant="primary">
-          add comment
-        </Button>
-      </Form.Group>
-    </Form>
+    <div>
+      <h3>New comment</h3>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="comment">
+          <Row className="align-items-center">
+            <Col xs="auto">
+              <Form.Control
+                type="text"
+                data-testid="comment"
+                name="comment"
+                placeholder="Enter comment"
+              />
+            </Col>
+            <Col xs="auto">
+              <Button type="submit" variant="primary">
+                add comment
+              </Button>
+            </Col>
+          </Row>
+        </Form.Group>
+      </Form>
+    </div>
   )
 }
 

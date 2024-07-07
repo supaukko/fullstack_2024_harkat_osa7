@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Navbar, Nav, Button } from 'react-bootstrap'
+import { Nav, Button } from 'react-bootstrap'
 function LoggedInUser({ user, handleLogout }) {
   return (
     <>
